@@ -135,7 +135,7 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- between any two MPAs in an ecoregion. Statistics are included in the current metastats.res dataset, but are filtered here ---- ####
 #### ---- to select only those associated with the maximum distance analysis. ---------------------------------------------------------- ####
 
-# round distances, change distances form Portugal (according to co-author Barbara Horta Costa):
+# round distances, change distances form Portugal (according to co-author Barbara Horta e Costa):
 # set maximum distance between MPA sites to 13 km and maximum distance among any two sites
 # (including MPAs and PAs) to 16; make DIST equal to MPANET_EXTENT (they both indicate the
 # maximum distance between two MPA sites; finlly, drop MPA_EXTENT.
