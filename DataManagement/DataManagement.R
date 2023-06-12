@@ -49,7 +49,7 @@ require(doMC, quietly=T)
 registerDoMC(cores=nc)
 
 # set working directory
-setwd("~/workspace/ReefFishStability/")
+setwd("~/Data_ReefFishStability/")
 
 # load raw fish abundance data data
 load("raw.fish.dat.RData")
