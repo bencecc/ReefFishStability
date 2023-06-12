@@ -34,13 +34,16 @@ if(!file.exists('~/Data_ReefFishStability/alpha_stab_tmp'))
 	dir.create('~/Data_ReefFishStability/alpha_stab_tmp')
 
 # require libraries
-require(dplyr)
+require(tidyverse)
 require(tidyr)
 require(tibble)
 require(knitr)
 require(codyn)
 require(FD)
 require(mFD)
+require(sf)
+require(rnaturalearth)
+require(fishualize)
 
 # set number of cores
 nc <- 15
@@ -128,8 +131,40 @@ n.open.sites
 n.mpa
 n.ecoreg
 
-#### ---- Summary by Study ID (Table 6) ---- ####
+#### ---- Plot Fig. 2a ---- ####
+# World map
+world <- ne_countries(scale = 10, returnclass = "sf")
+plot.dat <- st_as_sf(site_fish_stab, coords = c("LON", "LAT"), 
+		crs = 4326, agr = "constant")
 
+fig2a <- ggplot(data=world) + 
+		geom_sf(fill="#FFF8DD", color=NA) +
+		geom_sf(data=plot.dat, aes(shape=MPA,
+						fill=MPA, color=MPA),
+				size=0.8, alpha=0.5, show.legend=T) +
+		coord_sf(expand=F) +
+		scale_fill_fish_d(option = "Cirrhilabrus_solorensis",
+				begin=0.95, end=0.08, direction=1) +
+		scale_color_fish_d(option = "Cirrhilabrus_solorensis",
+				begin=0.95, end=0.08, direction=1) +
+		scale_x_continuous(breaks = seq(-180, 180, by = 60)) +
+		scale_y_continuous(breaks = seq(-90, 90, by = 30)) +
+		scale_shape_manual(values=c(19,17),
+				guide="none") + 
+		theme_bw()+
+		theme(
+				legend.position="none",
+				panel.background = element_rect(fill = "#C2E8F8"),
+				panel.grid = element_blank())
+
+#windows(height=3, width=8)
+plot(fig2a)
+
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/Fig.2a",
+		dpi = 300, width = 5, height = 3, useDingbats=FALSE)
+
+#### ---- Summary by Study ID (Table 6) ---- ####
 tab6 <- master.fish.dat %>%
 		#filter by sites used in alpha stability analysis
 		select(-c(INI_YEAR,END_YEAR)) %>%
