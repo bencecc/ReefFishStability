@@ -200,7 +200,7 @@ meta.dist.nullres <- cyclicshift.meta.dist.nullres  %>%
 				ID=fct_reorder(ID, DIST, mean)
 		)	
 
-windows(width=8, height=10)
+#windows(width=8, height=10)
 meta.dist.nullres %>%
 		ggplot(aes(x = fct_reorder(ID, DIST, mean), y=OBSERVED,
 						ymin=CI_LW95, ymax=CI_UP95)) +
