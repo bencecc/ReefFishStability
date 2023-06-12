@@ -164,8 +164,8 @@ dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig.2a",
 		dpi = 300, width = 5, height = 3, useDingbats=FALSE)
 
-#### ---- Summary by Study ID (Table 6) ---- ####
-tab6 <- master.fish.dat %>%
+#### ---- Summary by Study ID (Table 7) ---- ####
+supp.tab7 <- master.fish.dat %>%
 		#filter by sites used in alpha stability analysis
 		select(-c(INI_YEAR,END_YEAR)) %>%
 		mutate(ID=as.factor(ID), SITE_ID=as.factor(SITE_ID)) %>%
@@ -216,7 +216,7 @@ tab6 <- master.fish.dat %>%
 						LONGEST.TIMESERIES=longest.ts_No) %>%
 				relocate(c(N.MPAs, N.MPA.SITES), .before=N.OA.SITES)
 
-kable(tab6)
+kable(supp.tab7)
 
 # NOTE: Although the BioTIME database included only open areas (OA), these data were part
 # of the sampling programs maintained in 6 marine protected areas (MPAs) and were therefore
