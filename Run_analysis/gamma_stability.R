@@ -14,7 +14,7 @@ setwd("~/Data_ReefFishStability")
 #### ---- where selected if they included at least 2 MPA and 2 OA sites sampled         ---- ####
 #### ---- simultaneously for a minimum of 5 years. Selection was performed using        ---- ####
 #### ---- an algorithm that maximised the number of sites for all possible combinations ---- ####
-#### ---- of overlapping years ------------------------------------------------------------- ####
+#### ---- of overlapping years. ------------------------------------------------------------ ####
 load("master.ecoregion.fish.dat.RData") 
 
 # require libraries
