@@ -5,31 +5,20 @@
 require(dplyr)
 require(tidyr)
 require(tibble)
-#require(iNEXT)
 require(purrr)
 require(broom)
 require(ggplot2)
-#require(gamm4)
 require(mgcv)
 require(tidymv)
-
 require(ggpubr)
 require(fishualize)
 require(sjPlot)
 require(datawizard)
 require(forcats)
-
 require(lme4)
 require(lmerTest)
 require(ggeffects)
-
 require(performance)
-require(DHARMa)
-#require(glmmTMB)
-
-#require(foreach, quietly=T)
-#require(doMC, quietly=T)
-#registerDoMC(cores=16)
 
 setwd("~/Data_ReefFishStability/")
 load("master.fish.dat.RData")
@@ -115,23 +104,6 @@ ta.mean <- ta.df %>%
 		) %>%
 		drop_na(FeedingType)
 
-#[1] "ID"                "SITE_ID"           "SAMPLED_AREA"     
-#[4] "ASYNC_GROSS_W"     "ASYNC_LOREAU_SQRT" "CV_TOT_ABUND"     
-#[7] "REMOTENESS"        "MHW"               "MHW.MEAN.ABS"     
-#[10] "MHW.CUM.ABS"       "MHW.MAX.ABS"       "STAB"             
-#[13] "SP.STAB"         
-
-#### MEAN AND SD ABUNDANCE VS. MHW ####
-
-#test.dat <- site_fish_stab %>% 
-#		mutate(
-#				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
-#				SD.ABUND=standardize(log(SD_TOT_ABUND)),
-#				AREA=standardize(log(SAMPLED_AREA)),
-#				MPA=fct_relevel(MPA,
-#						c("Unprotected","Protected"))
-#		) 		
-
 # prepare data for analysis:
 # obtain total species abundances for each year in each site
 # obtain mean and standard deviations on log-transformed abundances
@@ -163,24 +135,10 @@ test.dat <- raw.fish.dat %>%
 
 #### ---- ANALYSIS USING lmer ---- ####
 
-# initialize predictions to apply site_plot_fun
-#x_range <- function(x) {
-#	xr <- range(x)
-#	seq(xr[1], xr[2], length.out=10)
-#}
-
-#meanabund.mhw <- lmer(MEAN.ABUND ~ MHW*MPA + (1|ID) + offset(AREA), 
-#		data=test.dat, REML=FALSE)
-#tab_model(meanabund.mhw,  show.stat=T, show.ci=F, show.se=T)
-#fs5a <- site_plot_func(meanabund.mhw, y.lab=T, r2=T)
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
 fs5a <- sep_fit_plot(test.dat, resp="MEAN.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
-#sdabund.mhw <- lmer(SD.ABUND ~ MHW*MPA + (1|ID) + offset(AREA), 
-#		data=test.dat, REML=FALSE)
-#tab_model(sdabund.mhw,  show.stat=T, show.ci=F, show.se=T)
-#fs5b <- site_plot_func(sdabund.mhw, y.lab=T, r2=T)
 fs5b <- sep_fit_plot(test.dat, resp="SD.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
@@ -199,96 +157,7 @@ dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.lmer.pdf",
 		scale=0.9, dpi = 300, width = 95, height = 50, units="mm", device=cairo_pdf)
 
-#### ---- ANALYSIS USING GAM ---- ####
-
-#mean.abund.mhw.gam <- gam(MEAN.ABUND ~ MPA + #s(MHW, bs="cs") +
-#				te(MHW, by=MPA,bs="cs") + s(ID, bs="re") +
-#				offset(AREA),
-#		data=test.dat, na.action="na.omit")
-#
-#summary(mean.abund.mhw.gam)
-#
-#sd.abund.mhw.gam <- gam(SD.ABUND ~ MPA + #s(MHW, bs="cs") +
-#				te(MHW, by=MPA,bs="cs") + s(ID, bs="re") +
-#				offset(AREA),
-#		data=test.dat, na.action="na.omit")
-#
-#summary(sd.abund.mhw.gam)
-#
-#fig.4.1 <- site_plot_gam(mean.abund.mhw.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-#fig.4.2 <- site_plot_gam(sd.abund.mhw.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-
-## GAMs are fitted separately for MPAs and OAs
-##mean.abund.mhw.gam <- sep_gam_plot(df=test.dat, resp="MEAN.ABUND", plot=F)
-##sd.abund.mhw.gam <- sep_gam_plot(df=test.dat, resp="SD.ABUND", plot=F)
-##fig.4.1 <- mean.abund.mhw.gam[[1]]
-##fig.4.2 <- sd.abund.mhw.gam[[1]]
-#
-#figs5 <- ggarrange(
-#		fig.4.1, fig.4.2,
-#		ncol=2, nrow=1,
-#		align="hv",
-#		labels=c("a","b"),
-#		font.label = list(size = 10),
-#		label.x=0.02
-#)
-#
-#windows(width=5,height=3)
-#figs5
-#
-#dev.off()
-#ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
-#		scale=0.9, dpi = 300, width = 95, height = 45, units="mm", device=cairo_pdf)
-
 #### TROPHIC CATEGORIES ####
-
-#### separate GAMs ####
-
-#ab.carn.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Above", FeedingType=="Carnivores"),
-#		resp="ABUND", r2=T, y.lab=F, x.lab=F, plot=F)
-#bl.carn.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Below", FeedingType=="Carnivores"),
-#		resp="ABUND", r2=T, y.lab=F, x.lab=F, plot=F)
-#
-#ab.gr.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Above", FeedingType=="Grazers"),
-#		resp="ABUND", r2=T, x.lab=F, plot=F)
-#bl.gr.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Below", FeedingType=="Grazers"),
-#		resp="ABUND", r2=T, y.lab=F, x.lab=F, plot=F)
-#
-#ab.mic.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Above", FeedingType=="Microphages"),
-#		resp="ABUND", r2=T, y.lab=F, x.lab=F, plot=F)
-#bl.mic.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Below", FeedingType=="Microphages"),
-#		resp="ABUND", r2=T, y.lab=F, x.lab=F, plot=F)
-#
-#ab.pl.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Above", FeedingType=="Planktivores"),
-#		resp="ABUND", r2=T, y.lab=F, plot=F)
-#bl.pl.gam <- sep_gam_plot(df=ta.mean %>% filter(Thresh=="Below", FeedingType=="Planktivores"),
-#		resp="ABUND", r2=T, y.lab=F, plot=F)
-#
-#fig.4.3 <- ab.carn.gam[[1]]
-#fig.4.4 <- bl.carn.gam[[1]]
-#fig.4.5 <- ab.gr.gam[[1]]
-#fig.4.6 <- bl.gr.gam[[1]]
-#fig.4.7 <- ab.mic.gam[[1]]
-#fig.4.8 <- bl.mic.gam[[1]]
-#fig.4.9 <- ab.pl.gam[[1]]
-#fig.4.10 <- bl.pl.gam[[1]]
-#
-#fig4 <- ggarrange(
-#		fig.4.3, fig.4.4,
-#		fig.4.5, fig.4.6,
-#		fig.4.7, fig.4.8,
-#		fig.4.9, fig.4.10,		
-#		ncol=2, nrow=4,
-#		align="hv",
-#		font.label = list(size = 10)
-#)
-#
-#windows(width=4,height=8)
-#fig4
-#dev.off()
-#ggsave(file = "~/Data_ReefFishStability/Figs/Fig4.pdf",
-#		scale=0.9, dpi = 300, width = 100, height = 180, units="mm", device=cairo_pdf)
-
 
 #### 2-way GAM ####
 # fitted using tensor products 
@@ -300,7 +169,6 @@ ab.carn.gam <- gam(ABUND ~ MPA + #s(MHW,  bs="cs") +
 		na.action="na.omit")
 
 #summary(ab.carn.gam)
-
 #windows(height=5, width=6)
 #gam.check(ab.carn.gam)	
 
@@ -358,36 +226,6 @@ bl.pl.gam <- gam(ABUND ~ MPA + #s(MHW,  bs="cs") +
 
 #### ---- PLOT GAM RESULTS - COMPOSITE FIG 4---- ####
 
-# vertical
-fig.4.3 <- site_plot_gam(ab.carn.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-fig.4.4 <- site_plot_gam(bl.carn.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-
-fig.4.5 <- site_plot_gam(ab.gr.gam, r2=T, x.lab=F, plot=T)
-fig.4.6 <- site_plot_gam(bl.gr.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-
-fig.4.7 <- site_plot_gam(ab.mic.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-fig.4.8 <- site_plot_gam(bl.mic.gam, r2=T, y.lab=F, x.lab=F, plot=T)
-
-fig.4.9 <- site_plot_gam(ab.pl.gam, r2=T, y.lab=F, plot=T)
-fig.4.10 <- site_plot_gam(bl.pl.gam, r2=T, y.lab=F, plot=T)
-
-fig4 <- ggarrange(
-		fig.4.3, fig.4.4,
-		fig.4.5, fig.4.6,
-		fig.4.7, fig.4.8,
-		fig.4.9, fig.4.10,		
-		ncol=2, nrow=4,
-		align="hv",
-		font.label = list(size = 10)
-)
-
-windows(width=4,height=8)
-fig4
-dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/Fig4.pdf",
-		scale=0.9, dpi = 300, width = 100, height = 180, units="mm", device=cairo_pdf)
-
-# horizontal
 fig.4.3 <- site_plot_gam(ab.carn.gam, r2=T, y.lab=T, x.lab=F, plot=T)
 fig.4.4 <- site_plot_gam(bl.carn.gam, r2=T, y.lab=F, x.lab=T, plot=T)
 
