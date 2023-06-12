@@ -130,7 +130,7 @@ setwd("~/Data_ReefFishStability")
 # load data
 load("~/Data_ReefFishStability/metastats.res.RData")
 
-#### ---- The original analysis on hpc calculated gamma stability and asynchorny measures for three distance ranges in addition to  ---- ####
+#### ---- The original analysis on HPC calculated gamma stability and asynchorny measures for three distance ranges in addition to  ---- ####
 #### ---- the maximum distance among MPAs, as used here. The distance ranges were: 0-20, 21-50, 51-100 kms and maximum distance     ---- ####
 #### ---- between any two MPAs in an ecoregion. Statistics are included in the current metastats.res dataset, but are filtered here ---- ####
 #### ---- to select only those associated with the maximum distance analysis. ---------------------------------------------------------- ####
@@ -439,7 +439,7 @@ p.meta.stab <- metastab.df %>% filter(METRIC_TYPE=="Stability") %>%
 		
 		)
 
-windows(width=8, height=6)
+#windows(width=8, height=6)
 p.meta.stab
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig5b.pdf",
@@ -476,7 +476,7 @@ p.meta.async <- metastab.df %>% filter(METRIC_TYPE=="Asynchrony") %>%
 		
 		)
 
-windows(width=8, height=6)
+#windows(width=8, height=6)
 p.meta.async
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS6b.pdf",
@@ -536,7 +536,7 @@ n.sites <- metastab.df %>% group_by(ID) %>%
 		select(ID, N_MPA, N_SITES_MPA, N_SITES_OA)
 
 
-tab5 <- metastats.res %>%
+supp.tab5 <- metastats.res %>%
 		mutate(DIST=round(DIST, 0),
 				DIST_RANGE=round(DIST_RANGE, 0),
 				ID=recode(ID,
@@ -554,7 +554,7 @@ tab5 <- metastats.res %>%
 		right_join(n.sites, by="ID") %>%
 		arrange(MPA_SCALE)
 
-kable(tab5) 
+kable(supp.tab5) 
 # NOTE: N_MPA for MPA = No indicates the number of MPAs within the distance range
 # to OA sites; the actual number of MPAs is given by MPA=Yes. 
 
