@@ -1,7 +1,7 @@
 # ReefFishStability
 # R code for the analysis of the paper by Benedetti-Cecchi et al (in review): Marine protected areas promote stability of reef fish communities under climate warming.
 
-# USE: 
+# USAGE: 
 To run the analyses, first create a folder called ReefFishStability in your home directory, then download the scripts  and copy the folders named
 DataManagement, MasterR and Run_analysis into the folder ReefFishStability.
 
