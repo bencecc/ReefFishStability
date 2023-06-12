@@ -165,10 +165,10 @@ save(cyclicshift.meta.dist.nullres,
 setwd("~/Data_ReefFishStability")
 load("cyclicshift.meta.dist.nullres.RData")
 
-# round distances and set maximum distance between MPA sites to 2 km for Portugal
+# round distances and set maximum distance between MPA sites to 13 km for Portugal
 cyclicshift.meta.dist.nullres <- cyclicshift.meta.dist.nullres %>%
 		mutate(DIST=round(DIST,0)) %>%
-		mutate(DIST=if_else(ID=="atleu", 2, DIST))
+		mutate(DIST=if_else(ID=="atleu", 13, DIST))
 		
 sel.metrics <- c(
 		"loc_sp_comm_async_gross_w",
