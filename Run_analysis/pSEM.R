@@ -261,7 +261,7 @@ p.semeff <- ggplot(plot.semeff.dat,
 				axis.text.x.bottom = element_text(size = 10, colour = "black"),
 				axis.title.x = element_text(size = 12, colour = "black"))
 
-windows(height=7, width=5)
+#windows(height=7, width=5)
 p.semeff
 
 dev.off()
@@ -410,7 +410,7 @@ p.semeff.gross.det <- ggplot(plot.semeff.dat,
 				axis.text.x.bottom = element_text(size= 10, colour = "black"),
 				axis.title.x = element_text(size = 12, colour = "black"))
 
-windows(height=8, width=6)
+#windows(height=8, width=6)
 p.semeff.gross.det
 
 dev.off()
@@ -557,7 +557,7 @@ p.semeff.loreau.sqrt <- ggplot(plot.semeff.dat,
 				axis.text.x.bottom = element_text(size= 10, colour = "black"),
 				axis.title.x = element_text(size = 12, colour = "black"))
 
-windows(height=8, width=6)
+#windows(height=8, width=6)
 p.semeff.loreau.sqrt
 
 dev.off()
