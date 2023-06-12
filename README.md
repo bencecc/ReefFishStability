@@ -7,7 +7,7 @@ To run the analyses, first create a folder called ReefFishStability in your home
 DataManagement, MasterR and Run_analysis into the folder ReefFishStability.
 
 ## Description of files
- - DataManagement: includes an R script with the same name that does data cleaning and generates file master.fish.dat for alpha stability analysis. This is required if you want to start the analysis from scratch. Otherwise, the necessary files are provided in folder Run_analysis.
+ - DataManagement: includes an R script with the same name that does data cleaning and generates the file called master.fish.dat for alpha stability analysis. This is required if you want to start the analysis from scratch. Otherwise, you can skip this part ond go directly to execute the code  provided in folder Run_analysis.
  - MasterR: includes the required scripts and aggregated data to run the full analysis, including plots. These scripts are called when running the code in Run_analysis.
  - Run_analysis: includes the code to run the various steps of the analysis. Please, note that some steps were originally performed on an HPC; the code provided here uses foreach loops, but in some cases, especially the jackknife simulation, the analysis is slow. This is noted when appropriate, but the slow parts of the code can be skipped since the resulting files are provided to run directly the downstream analysis.
 
