@@ -51,11 +51,6 @@ registerDoMC(cores=nc)
 # set working directory
 setwd("~/workspace/ReefFishStability/")
 
-rmarkdown::render("ReefFishStability.Rmd")
-
-# load ,aster.fish.dat
-#load("master.fish.dat.RData")
-
 # load raw fish abundance data data
 load("raw.fish.dat.RData")
 
