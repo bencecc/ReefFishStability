@@ -136,14 +136,14 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- to select only those associated with the maximum distance analysis. ---------------------------------------------------------- ####
 
 # round distances, change distances form Portugal (according to co-author Barbara Horta Costa):
-# set maximum distance between MPA sites to 2 km and maximum distance among any two sites
+# set maximum distance between MPA sites to 13 km and maximum distance among any two sites
 # (including MPAs and PAs) to 16; make DIST equal to MPANET_EXTENT (they both indicate the
 # maximum distance between two MPA sites; finlly, drop MPA_EXTENT.
 
 metastats.res <- metastats.res %>% group_by(ID) %>%
 		filter(DIST==max(DIST)) %>% mutate(DIST=MPANET_EXTENT) %>%
 		mutate(DIST=round(DIST, 0),
-				DIST=if_else(ID=="atleu", 2, DIST),
+				DIST=if_else(ID=="atleu", 13, DIST),
 				DIST_RANGE=if_else(ID=="atleu", 16, DIST_RANGE)) %>%
 		select(-MPANET_EXTENT)
 								
@@ -384,8 +384,8 @@ metastab.df <- rbind(stab.df, async.df) %>%
 				MPA.EXTENT=fct_reorder(MPA.EXTENT, DIST, mean)
 		) %>%
 		ungroup() %>%
-		mutate(DIST==case_when(ID=="SEAS" ~ 2,
-				TRUE ~ as.numeric(DIST))) # maximum distance between MPA sites in SEAS is 2 km.
+		mutate(DIST==case_when(ID=="SEAS" ~ 13,
+				TRUE ~ as.numeric(DIST))) # maximum distance between MPA sites in SEAS is 13 km.
 
 point.est.df <- metastab.df %>%
 		group_by(ID, DIST, METRIC_TYPE, METRICS,
