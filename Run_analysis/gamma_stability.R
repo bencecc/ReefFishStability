@@ -135,18 +135,14 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- between any two MPAs in an ecoregion. Statistics are included in the current metastats.res dataset, but are filtered here ---- ####
 #### ---- to select only those associated with the maximum distance analysis. ---------------------------------------------------------- ####
 
-# round distances, change distances form Portugal (according to co-author Barbara Horta e Costa):
-# set maximum distance between MPA sites to 13 km and maximum distance among any two sites
-# (including MPAs and PAs) to 16; make DIST equal to MPANET_EXTENT (they both indicate the
+# round distances, make DIST equal to MPANET_EXTENT (they both indicate the
 # maximum distance between two MPA sites; finlly, drop MPA_EXTENT.
 
 metastats.res <- metastats.res %>% group_by(ID) %>%
 		filter(DIST==max(DIST)) %>% mutate(DIST=MPANET_EXTENT) %>%
-		mutate(DIST=round(DIST, 0),
-				DIST=if_else(ID=="atleu", 13, DIST),
-				DIST_RANGE=if_else(ID=="atleu", 16, DIST_RANGE)) %>%
+		mutate(DIST=round(DIST, 0)) %>%
 		select(-MPANET_EXTENT)
-								
+
 # select metrics and prepare data for analysis
 sel.metrics <- c("gamma_stab","alpha_stab","pop_stab","species_stab","loc_sp_comm_async_gross_w",
 		"loc_comm_metacom_async_gross_w","meta_pop_metacom_async_gross_w",
@@ -383,9 +379,7 @@ metastab.df <- rbind(stab.df, async.df) %>%
 				MPA.EXTENT=factor(floor(DIST)),
 				MPA.EXTENT=fct_reorder(MPA.EXTENT, DIST, mean)
 		) %>%
-		ungroup() %>%
-		mutate(DIST==case_when(ID=="SEAS" ~ 13,
-				TRUE ~ as.numeric(DIST))) # maximum distance between MPA sites in SEAS is 13 km.
+		ungroup()
 
 point.est.df <- metastab.df %>%
 		group_by(ID, DIST, METRIC_TYPE, METRICS,
@@ -487,13 +481,13 @@ ggsave(file = "~/Data_ReefFishStability/Figs/FigS6b.pdf",
 #### ---- --------------------------------------------------------  ---- ####
 fit.extent <- point.est.df %>%
 		nest(data=-c("METRIC_TYPE","METRICS")) %>%
-		mutate(fit = map(data, ~ lm(mepred ~ MPANET_EXTENT, data = .x)),
+		mutate(fit = map(data, ~ lm(mepred ~ MPA.EXTENT, data = .x)),
 				tidied = map(fit, tidy),
 				augmented = map(fit, augment),
 				glanced = map(fit, glance)
 		) %>%
 		unnest(tidied) %>%
-		filter(term=="MPANET_EXTENT") %>%
+		filter(term=="MPA.EXTENT") %>%
 		rename(slope="estimate", x.var="term", t_stat="statistic") 
 
 #knitr::kable(fit.extent)
@@ -545,7 +539,7 @@ supp.tab5 <- metastats.res %>%
 						southaust="SAG",southcalif="SCB",tweed="TM")
 		) %>%
 		group_by(ID, MPA, DIST, N_MPA, MEAN_N_SITES, MAX_N_SITES, SAMPLED_AREA,
-				MPANET_EXTENT, DIST_RANGE) %>%
+				DIST_RANGE) %>%
 		slice(1L) %>%
 		ungroup() %>%
 		select(ID, DIST, DIST_RANGE) %>%
