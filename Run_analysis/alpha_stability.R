@@ -130,7 +130,7 @@ fig2bk <- ggarrange(
 		label.x=0.1
 )
 
-windows(width=12,height=8)
+#windows(width=12,height=8)
 fig2bk
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig2b-k.pdf",
@@ -146,7 +146,7 @@ figs1 <- ggarrange(
 		label.x=0.15
 )
 
-windows(width=6,height=2)
+#windows(width=6,height=2)
 figs1
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS1.pdf",
@@ -234,7 +234,7 @@ figs2 <- ggarrange(
 		label.x=0.15
 )
 
-windows(width=6,height=8)
+#windows(width=6,height=8)
 figs2
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS2.pdf",
@@ -324,7 +324,7 @@ figs3 <- ggarrange(
 		label.x=0.15
 )
 
-windows(width=8,height=4)
+#windows(width=8,height=4)
 figs3
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS3.pdf",
