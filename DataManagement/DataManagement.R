@@ -22,13 +22,6 @@ if(!file.exists('~/workspace/ReefFishStability/MasterR'))
 if(!file.exists('~/Data_ReefFishStability'))
 	dir.create('~/Data_ReefFishStability')
 
-# This folder should include the following data files:
-# 1) master.fish.dat.RData - the raw fish abundance data
-# 2) fish.traits.RData - fish traits
-# 3) covars.RData - environmental covariates
-# 4) master.ecoregion.fish.dat.RData
-# 5) all distance matrices: .... dist.RData
-
 # create directory for figures
 if(!file.exists('~/Data_ReefFishStability/Figs'))
 	dir.create('~/Data_ReefFishStability/Figs')
