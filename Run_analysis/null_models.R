@@ -1,5 +1,5 @@
 #### ------------------------------ NULL MODELS OF GAMMA STABILITY ------------------------------------------ ####
-#### ---- NOTE: this analysis is slow and was originally performed on an hpc cluster. The resulting file ---- ####
+#### ---- NOTE: this analysis is slow and was originally performed on an HPC cluster. The resulting file ---- ####
 #### ---- cyclicshift.meta.dist.nullres.RData is provided in folder ~/Data_ReefFishStability and you may ---- ####
 #### ---- want to go directly to the analysis at line 163 of this script. ----------------------------------- ####
 
@@ -39,7 +39,6 @@ source("~/workspace/ReefFishStability/MasterR/gross_w_func.R")
 source("~/workspace/ReefFishStability/MasterR/sync_det_funcs.R")
 source("~/workspace/ReefFishStability/MasterR/stats_nullstab_dist.R")
 
-
 # sync_det_funcs.R is needed for detrending with the
 # three-term local variance, as in Leps et al. Ecography
 source("~/workspace/ReefFishStability/MasterR/sync_det_funcs.R")
@@ -70,7 +69,6 @@ cyclic_shift <- function(data, ...) {
 	
 	time.cyclic
 }
-
 
 id <- unique(master.ecoregion.fish.dat$ID)
 
@@ -120,8 +118,7 @@ for (i in id) {
 					}
 					
 				}
-				
-				
+						
 				if(i==1) {
 					
 					stab.obs.mpa <- data.frame(DATA.TYPE="Obs", stab_by_dist(df=ecoreg.dat, dist.dat=dist.dat, cut.range=target.range, mpa="Yes"))				
@@ -147,7 +144,6 @@ for (i in id) {
 	
 }
 
-
 # collect and save results
 
 meta_null_res <- foreach(i=1:length(file_list), .combine='rbind') %dopar% {
@@ -169,7 +165,7 @@ load("cyclicshift.meta.dist.nullres.RData")
 cyclicshift.meta.dist.nullres <- cyclicshift.meta.dist.nullres %>%
 		mutate(DIST=round(DIST,0)) %>%
 		mutate(DIST=if_else(ID=="atleu", 13, DIST))
-		
+
 sel.metrics <- c(
 		"loc_sp_comm_async_gross_w",
 		"loc_comm_metacom_async_gross_w",
