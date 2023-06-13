@@ -170,7 +170,7 @@ dat.oa <- metastats.res %>% filter(MPA=="No"&
 		dplyr::select(-c("N_MPA"))
 
 # calculate Hedge's g effect size; since the jackknife procedure uses the leave-one-out
-# of indivdual species, the total number of species in each ecoregion provides
+# method on indivdual species, the total number of species in each ecoregion provides
 # the sample size for calculating effect sizes
 eff.size.df <- dat.mpa  %>% left_join(dat.oa,
 				by=c("ID","DIST","METRICS")) %>%
