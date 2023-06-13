@@ -21,12 +21,19 @@ require(ggeffects)
 require(performance)
 
 setwd("~/Data_ReefFishStability/")
-load("master.fish.dat.RData")
-load("raw.fish.dat.RData")
 
+# load data
+load("raw.fish.dat.RData")
 load("site_fish_stab.RData")
 load("fish.traits.dat.RData")
 load("mhw.res.by.yr.RData")
+
+master.fish.dat <- raw.fish.dat %>%
+		group_by(ID,SITE_ID,LAT,LON,YEAR,MPA,MPA_STATUS,MPA_NAME,
+				IUCN_CAT,NO_TAKE,STATUS_YR,STATUS,SAMP_AGE,N_YEARS,INI_YEAR,
+				END_YEAR,N_REPS,N_DATES,SAMPLED_AREA,TRANSECT_SIZE,ECOREGION,
+				ECO_CODE,PROVINCE,PROV_CODE,REALM,RLM_CODE,SPECIES) %>%
+		summarise(abund=sum(abund), .groups="drop") 
 
 # source functions
 source("~/workspace/ReefFishStability/MasterR/sep_fit_plot.R") # separate model fits for MPAs and OAs
