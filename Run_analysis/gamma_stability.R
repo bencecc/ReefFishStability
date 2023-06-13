@@ -131,9 +131,9 @@ setwd("~/Data_ReefFishStability")
 load("~/Data_ReefFishStability/metastats.res.RData")
 
 #### ---- The original analysis on HPC calculated gamma stability and asynchorny measures for three distance ranges in addition to  ---- ####
-#### ---- the maximum distance among MPAs, as used here. The distance ranges were: 0-20, 21-50, 51-100 kms and maximum distance     ---- ####
-#### ---- between any two MPAs in an ecoregion. Statistics are included in the current metastats.res dataset, but are filtered here ---- ####
-#### ---- to select only those associated with the maximum distance analysis. ---------------------------------------------------------- ####
+#### ---- the maximum distance among MPAs, which is the relevant measure here. The distance ranges were: 0-20, 21-50, 51-100 km     ---- ####
+#### ---- and maximum distance between any two MPAs in an ecoregion. Statistics are included in the current metastats.res dataset,  ---- ####
+#### ---- but are filtered here to select only those associated with the maximum distance analysis. ------------------------------------ ####
 
 # round distances, make DIST equal to MPANET_EXTENT (they both indicate the
 # maximum distance between two MPA sites; finlly, drop MPA_EXTENT.
