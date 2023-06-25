@@ -1,4 +1,4 @@
-#### ------------------------------ NULL MODELS OF GAMMA STABILITY ------------------------------------------ ####
+#### ------------------------------ NULL MODELS FOR GAMMA STABILITY ------------------------------------------ ####
 #### ---- NOTE: this analysis is slow and was originally performed on an HPC cluster. The resulting file ---- ####
 #### ---- cyclicshift.meta.dist.nullres.RData is provided in folder ~/Data_ReefFishStability and you may ---- ####
 #### ---- want to go directly to the analysis at line 163 of this script. ----------------------------------- ####
