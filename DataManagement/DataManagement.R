@@ -35,7 +35,6 @@ if(!file.exists('~/Data_ReefFishStability/alpha_stab_tmp'))
 
 # require libraries
 require(tidyverse)
-require(tidyr)
 require(tibble)
 require(knitr)
 require(codyn)
@@ -63,6 +62,22 @@ master.fish.dat <- raw.fish.dat %>%
 				END_YEAR,N_REPS,N_DATES,SAMPLED_AREA,TRANSECT_SIZE,ECOREGION,
 				ECO_CODE,PROVINCE,PROV_CODE,REALM,RLM_CODE,SPECIES) %>%
 		summarise(abund=sum(abund), .groups="drop") 
+
+# How many taxa are not identified at the species level?
+load("fish.trais.names")
+chr.rm <- c("sp", "sp.", "spp", "spp.")
+sp <- (fish.traits.names %>% filter(SPECIES%in%
+				unique(master.fish.dat$SPECIES)) %>% distinct())$SPECIES
+disamb.sp <- lapply(sp, function(x) {
+			chr.split <- str_extract_all(x, boundary("word"))[[1]]	
+			if(any(chr.split%in%chr.rm)) {
+				out=0} else{
+				out=1}
+		out	
+		})
+
+valid.sp <- sum(unlist(disamb.sp))
+perc.invalid <- (length(sp)-valid.sp)/length(sp)
 
 #load("master.fish.dat.RData")
 load("fish.traits.RData")
@@ -164,8 +179,8 @@ dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig.2a",
 		dpi = 300, width = 5, height = 3, useDingbats=FALSE)
 
-#### ---- Summary by Study ID (Table 7) ---- ####
-supp.tab7 <- master.fish.dat %>%
+#### ---- Summary by Study ID (Table 8) ---- ####
+supp.tab8 <- master.fish.dat %>%
 		#filter by sites used in alpha stability analysis
 		select(-c(INI_YEAR,END_YEAR)) %>%
 		mutate(ID=as.factor(ID), SITE_ID=as.factor(SITE_ID)) %>%
@@ -216,7 +231,7 @@ supp.tab7 <- master.fish.dat %>%
 						LONGEST.TIMESERIES=longest.ts_No) %>%
 				relocate(c(N.MPAs, N.MPA.SITES), .before=N.OA.SITES)
 
-kable(supp.tab7)
+kable(supp.tab8)
 
 # NOTE: Although the BioTIME database included only open areas (OA), these data were part
 # of the sampling programs maintained in 6 marine protected areas (MPAs) and were therefore
