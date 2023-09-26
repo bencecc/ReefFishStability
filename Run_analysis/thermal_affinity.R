@@ -2,19 +2,14 @@
 #### ---- by selecting species with a Species Temperature Index (STI) below   ---- #### 
 #### ---- or equal-above maximum MHW intensity.                               ---- ####
 
-require(dplyr)
-require(tidyr)
-require(tibble)
-require(purrr)
+require(tidyverse)
 require(broom)
-require(ggplot2)
 require(mgcv)
 require(tidymv)
 require(ggpubr)
 require(fishualize)
 require(sjPlot)
 require(datawizard)
-require(forcats)
 require(lme4)
 require(lmerTest)
 require(ggeffects)
@@ -143,14 +138,14 @@ test.dat <- raw.fish.dat %>%
 #### ---- ANALYSIS USING lmer ---- ####
 
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-fs5a <- sep_fit_plot(test.dat, resp="MEAN.ABUND", cov="MHW",
+fs8a <- sep_fit_plot(test.dat, resp="MEAN.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
-fs5b <- sep_fit_plot(test.dat, resp="SD.ABUND", cov="MHW",
+fs8b <- sep_fit_plot(test.dat, resp="SD.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
-figs5 <- ggarrange(
-		fs5a[[1]], fs5b[[1]],
+figs8 <- ggarrange(
+		fs8a[[1]], fs8b[[1]],
 		ncol=2, nrow=1,
 		align="hv",
 		labels=c("a","b"),
@@ -159,9 +154,9 @@ figs5 <- ggarrange(
 )
 
 windows(width=6,height=4)
-figs5
+figs8
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.lmer.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS8.lmer.pdf",
 		scale=0.9, dpi = 300, width = 95, height = 50, units="mm", device=cairo_pdf)
 
 #### TROPHIC CATEGORIES ####
@@ -245,7 +240,7 @@ fig.4.8 <- site_plot_gam(bl.mic.gam, r2=T, y.lab=F, x.lab=F, plot=T)
 fig.4.9 <- site_plot_gam(ab.pl.gam, r2=T, y.lab=F, x.lab=F, plot=T)
 fig.4.10 <- site_plot_gam(bl.pl.gam, r2=T, y.lab=F, x.lab=F, plot=T)
 
-fig4_h <- ggarrange(
+fig4 <- ggarrange(
 		fig.4.3, fig.4.5, fig.4.7, fig.4.9,
 		fig.4.4, fig.4.6, fig.4.8, fig.4.10,		
 		ncol=4, nrow=2,
@@ -257,7 +252,7 @@ fig4_h <- ggarrange(
 windows(width=8,height=4)
 fig4_h
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/Fig4_h.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/Fig4.pdf",
 		scale=0.9, dpi = 300, width = 180, height = 100, units="mm")
 
 #### ---- Extract fish silouettes ---- ####
