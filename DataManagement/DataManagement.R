@@ -64,7 +64,7 @@ master.fish.dat <- raw.fish.dat %>%
 		summarise(abund=sum(abund), .groups="drop") 
 
 # How many taxa are not identified at the species level?
-load("fish.trais.names")
+load("fish.traits.names")
 chr.rm <- c("sp", "sp.", "spp", "spp.")
 sp <- (fish.traits.names %>% filter(SPECIES%in%
 				unique(master.fish.dat$SPECIES)) %>% distinct())$SPECIES
