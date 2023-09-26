@@ -35,7 +35,6 @@ if(!file.exists('~/Data_ReefFishStability/alpha_stab_tmp'))
 
 # require libraries
 require(tidyverse)
-require(tibble)
 require(knitr)
 require(codyn)
 require(FD)
