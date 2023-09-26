@@ -18,12 +18,9 @@ setwd("~/Data_ReefFishStability")
 load("master.ecoregion.fish.dat.RData") 
 
 # require libraries
-require(dplyr)
+require(tidyverse)
 require(codyn)
-require(tidyr)
 require(modelr)
-require(ggplot2)
-require(forcats)
 require(ggstatsplot)
 require(fishualize)
 
@@ -226,7 +223,7 @@ meta.dist.nullres %>%
 				axis.title.x = element_text(size = 12, colour = "black"))
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/cyclicshift.nullmeta.dist.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS13.pdf",
 		dpi = 300, width = 8, height = 10, useDingbats=FALSE)
 
 
