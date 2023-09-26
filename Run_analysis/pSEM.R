@@ -88,7 +88,7 @@ modoa
 coefs(mod.oa, standardize="scale")
 
 #### ---- USE semEff TO ESTIMATE DIRECT, INDIRECT AND TOTAL ---- ####
-#### ---- EFFECTS AND COMPARE MPA AND OA MODELS ------------- ####
+#### ---- EFFECTS AND COMPARE MPA AND OA MODELS ---------------- ####
 
 #### MPA
 mod.mpa <-  list(
@@ -414,7 +414,7 @@ p.semeff.gross.det <- ggplot(plot.semeff.dat,
 p.semeff.gross.det
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS4a.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS7a.pdf",
 		dpi = 300, width = 5, height = 7, useDingbats=FALSE)
 
 # SQRT(LOREAU_DEMAZANCOURT)
@@ -561,7 +561,7 @@ p.semeff.loreau.sqrt <- ggplot(plot.semeff.dat,
 p.semeff.loreau.sqrt
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS4b.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS7b.pdf",
 		dpi = 300, width = 5, height = 7, useDingbats=FALSE)
 
 
