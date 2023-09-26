@@ -1,4 +1,4 @@
-#### ---- Alpha stability analysis ---- ####
+#### ---- Alpha stability and sampling completeness analysis ---- ####
 
 # require libraries
 require(tidyverse)
