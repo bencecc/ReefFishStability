@@ -1,18 +1,16 @@
 #### ---- Alpha stability analysis ---- ####
 
 # require libraries
-require(dplyr)
-require(tidyr)
-require(ggplot2)
+require(tidyverse)
 require(fishualize)
 require(ggpubr)
 require(lme4)
 require(lmerTest)
 require(ggeffects)
 require(sjPlot)
+require(iNEXT)
 require(performance)
 require(datawizard)
-require(forcats)
 
 # load data
 setwd("~/Data_ReefFishStability/")
@@ -240,7 +238,7 @@ dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS2.pdf",
 		dpi = 300, width = 150, height = 180, units="mm", device=cairo_pdf)
 
-#### Analysis with detrended ASYNC ---- ####
+#### ---- Analysis with detrended ASYNC ---- ####
 test.dat <- site_fish_stab %>% 
 		mutate(
 				STAB=standardize(log(1/CV_TOT_ABUND)),
@@ -330,7 +328,297 @@ dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS3.pdf",
 		dpi = 300, width = 180, height = 90, units="mm", device=cairo_pdf)
 
+#### Analysis with cumulative instead of mean MHW intensity  ---- ####
+test.dat <- site_fish_stab %>% 
+		mutate(
+				STAB=standardize(log(1/CV_TOT_ABUND)),
+				SP.STAB=standardize(log(1/CV_SP_ABUND)),
+				ASYNC=standardize(ASYNC_LOREAU_SQRT),
+				FRIC=standardize(mFRic),
+				MHW=standardize(MHW.CUM),
+				REMOTENESS=standardize(REMOTENESS),
+				AREA=standardize(log(SAMPLED_AREA)),
+				MPA=forcats::fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
 
+#### ALPHA STAB  ####
+x.range <- (test.dat %>% summarise(range=range(ASYNC)))$range
+alpha.async.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
+# SP.STAB
+x.range <- (test.dat %>% summarise(range=range(SP.STAB)))$range
+alpha.spstab.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
+# FRIC
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+alpha.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+alpha.mhw.mhwcum <- p.alpha.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+alpha.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+
+#### SP.STAB ####
+# FRIC (analysis for plotting and to tabulate statistical results)
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+spstab.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW 
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+spstab.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+spstab.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+#### ASYNC ####
+# FRIC (analysis for plotting and to tabulate statistical results)
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+async.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+async.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+async.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+#### FUNCIONAL RICHNESS ####
+# FRIC 
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+fric.mhwcum <- sep_fit_plot(df=test.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
+fric.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=T, y.lab=F, plot=F)
+
+# FigS4
+figs4 <- ggarrange(
+		alpha.async.mhwcum[[1]], alpha.spstab.mhwcum[[1]], alpha.mhw.mhwcum[[1]], alpha.remot.mhwcum[[1]],
+		spstab.mhwcum[[1]], spstab.remot.mhwcum[[1]], async.mhwcum[[1]], async.remot.mhwcum[[1]],
+		fric.mhwcum[[1]], fric.remot.mhwcum[[1]],
+		ncol=4, nrow=3,
+		align="hv",
+		labels=c("a","b","c","d","e","f","g","h","i","j"),
+		font.label = list(size = 10),
+		label.x=0.1
+)
+
+windows(width=12,height=8)
+figs4
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS4.pdf",
+		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
+
+#### ---- Sensitivity analysis for the offset ---- ####
+# remove standardization for stability measures and the offset and use log-transformed data
+# to express the scaled stability response variables as rates (log-ratios) rather than as
+# differences; show relations of stability with MHW.
+# NOTE: remove offset from function sep_fit_plot for resp=STAB and resp=SP.STAB
+# before running this analysis
+
+#### ALPHA STAB  ####
+test.dat <- site_fish_stab %>% 
+		mutate(
+				STAB=log(1/CV_TOT_ABUND/SAMPLED_AREA),
+				SP.STAB=standardize(log(1/CV_SP_ABUND)),
+				ASYNC=standardize(ASYNC_GROSS_W),
+				FRIC=standardize(mFRic),
+				SR=standardize(N_SPEC),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				#AREA=log(SAMPLED_AREA),
+				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
+				SD.ABUND=standardize(log(SD_TOT_ABUND)),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
+
+# MHW
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+alpha1.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+
+#### SP.STAB ####
+test.dat <- site_fish_stab %>% 
+		mutate(
+				SP.STAB=log(1/CV_SP_ABUND/SAMPLED_AREA),
+				ASYNC=standardize(ASYNC_GROSS_W),
+				FRIC=standardize(mFRic),
+				SR=standardize(N_SPEC),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				#AREA=log(SAMPLED_AREA),
+				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
+				SD.ABUND=standardize(log(SD_TOT_ABUND)),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
+# MHW 
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+spstab1.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+
+# FigS5
+figs5 <- ggarrange(
+		alpha1.mhw[[1]], spstab1.mhw[[1]],
+		ncol=2, nrow=1,
+		align="hv",
+		labels=c("a","b"),
+		font.label = list(size = 10),
+		label.x=0.05
+)
+
+windows(width=8,height=4)
+figs5
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
+		dpi = 300, width = 100, height = 50, units="mm", device=cairo_pdf)
+
+#### ---- Correlation among functional diversity indices ---- ####
+
+cor.test(site_fish_stab$mFRic, site_fish_stab$mFDiv)
+cor.test(site_fish_stab$mFRic, site_fish_stab$mFEv)
+cor.test(site_fish_stab$mFRic, site_fish_stab$mFDis)
+cor.test(site_fish_stab$mFRic, site_fish_stab$mFSpe)
+cor.test(site_fish_stab$mFRic, site_fish_stab$mFOri)
+
+cor.test(site_fish_stab$mFDiv, site_fish_stab$mFEv)
+cor.test(site_fish_stab$mFDiv, site_fish_stab$mFDis)
+cor.test(site_fish_stab$mFDiv, site_fish_stab$mFSpe)
+cor.test(site_fish_stab$mFDiv, site_fish_stab$mFOri)
+
+cor.test(site_fish_stab$mFEv, site_fish_stab$mFDis)
+cor.test(site_fish_stab$mFEv, site_fish_stab$mFSpe)
+cor.test(site_fish_stab$mFEv, site_fish_stab$mFOri)
+
+cor.test(site_fish_stab$mFDis, site_fish_stab$mFSpe)
+cor.test(site_fish_stab$mFDis, site_fish_stab$mFOri)
+
+#### ---- Check sampling completeness by transect size ---- ####
+# load data
+setwd("~/Data_ReefFishStability/")
+load("master.fish.dat.RData")
+
+fish.sp.abund <- master.fish.dat %>% 
+		filter(SITE_ID%in%site_fish_stab$SITE_ID) %>%
+		#mutate(abund=exp(abund)-1) %>%
+		mutate(TRANSECT_SIZE=case_when(
+						TRANSECT_SIZE<=125 ~ 100,
+						TRANSECT_SIZE>125&TRANSECT_SIZE<=200 ~ 180,
+						TRANSECT_SIZE>200&TRANSECT_SIZE<500 ~ 250,
+						TRANSECT_SIZE==500 ~ 500,
+						TRANSECT_SIZE>500 ~ 2000, 
+						TRUE ~ as.numeric(TRANSECT_SIZE))
+		)
+
+inext.res <- list()
+for(i in 1:length(unique(fish.sp.abund$TRANSECT_SIZE))) {
+	
+	test.dat <- fish.sp.abund %>%
+			filter(TRANSECT_SIZE==unique(fish.sp.abund$TRANSECT_SIZE)[i]) %>%
+			group_by(SITE_ID,MPA,SPECIES) %>%
+			summarise(abund=sum(abund), .groups="drop") %>%
+			mutate(abund=1) %>%
+			group_by(MPA) %>%
+			pivot_wider(names_from="SITE_ID",
+					values_from="abund", values_fill=0) %>%
+			arrange(MPA,SPECIES)
+	
+	prot <- unique(test.dat$MPA)
+	
+	if(length(prot)==1) {
+		
+		if(prot=="No") {
+			
+			nompa.dat.tmp <- test.dat %>% ungroup() %>%
+					dplyr::select(-c(MPA,SPECIES)) %>%
+					mutate(total=rowSums(.)) %>% filter(total>0)
+			nompa.dat <- c(ncol(nompa.dat.tmp)-1, nompa.dat.tmp$total)
+			list.dat <- list(Unprotected=nompa.dat)
+			
+		}
+		
+		if(prot=="Yes") {
+			
+			mpa.dat.tmp <- test.dat %>% ungroup() %>%
+					dplyr::select(-c(MPA,SPECIES)) %>%
+					mutate(total=rowSums(.)) %>% filter(total>0)
+			mpa.dat <- c(ncol(mpa.dat.tmp)-1, mpa.dat.tmp$total)
+			list.dat <- list(Protected=mpa.dat)
+			
+		}
+		
+	}
+	
+	else {
+		mpa.dat.tmp <- test.dat %>% ungroup() %>%
+				filter(MPA=="Yes") %>% dplyr::select(-c(MPA,SPECIES)) %>%
+				mutate(total=rowSums(.)) %>% filter(total>0)
+		mpa.dat <- c(ncol(mpa.dat.tmp)-1, mpa.dat.tmp$total)
+		
+		nompa.dat.tmp <- test.dat %>% ungroup() %>%
+				filter(MPA=="No") %>% dplyr::select(-c(MPA,SPECIES)) %>%
+				mutate(total=rowSums(.)) %>% filter(total>0)
+		nompa.dat <- c(ncol(nompa.dat.tmp)-1, nompa.dat.tmp$total)
+		
+		list.dat <- list(Protected=mpa.dat, Unprotected=nompa.dat)
+		
+	}
+	
+	inext.tmp <- try(iNEXT(list.dat, q=0, datatype="incidence_freq",
+					nboot=100), silent=T)
+	
+	if (inherits(inext.tmp, "try-error")) {
+		inext.plot <- NULL
+	}
+	
+	else {
+		
+		inext.plot <- plot.iNEXT.rar(inext.tmp, plot.type="coverage")
+		
+	}
+	
+	inext.res[[i]] <- inext.plot
+	
+}
+
+names(inext.res) <- unique(fish.sp.abund$TRANSECT_SIZE)
+inext.div.mpa.plot <- inext.res
+
+div.coverage <- ggarrange(
+		inext.div.mpa.plot[[3]], inext.div.mpa.plot[[5]], inext.div.mpa.plot[[1]], 
+		inext.div.mpa.plot[[4]], inext.div.mpa.plot[[2]],
+		ncol=3, nrow=2,
+		#align="hv",
+		#labels=c("100","180","250","500","2000"),
+		font.label = list(size = 10),
+		#common.legend=TRUE,
+		label.x=0.5,
+		label.y=1.05
+)
+
+
+windows(width=7, height=4)
+div.coverage
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS6.pdf",
+		dpi = 300, width = 7, height = 4, useDingbats=FALSE)
+
+# evaluate proportion of transects in the 180 m^2 category.
+size.180 <- fish.sp.abund %>%
+		filter(TRANSECT_SIZE==180) %>%
+		distinct(SITE_ID)
+size.not180 <-  fish.sp.abund %>%
+		filter(TRANSECT_SIZE!=180) %>%
+		distinct(SITE_ID)
+
+ratio.sites <- nrow(size.180)/nrow(size.not180) # 2.2%
+
+# evaluate maximum coverage
+max.cov <- NULL
+for(i in 1:length(inext.div.mpa.plot)) {
+	tmp.df <- inext.div.mpa.plot[[i]][[1]] %>%
+			group_by(data.name) %>%
+			summarise(max.cov=max(diversity))
+	tmp.out <- cbind(
+			transect.size=names(inext.div.mpa.plot)[i],
+			tmp.df
+	)
+	max.cov <- rbind(max.cov, tmp.out)
+}
+
+#### -------------------------------------------------------------- ####
 
 
 
