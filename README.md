@@ -8,7 +8,7 @@ To run the analyses, first download the files on your computer, then:
 1) create a folder in your home directory named Data_ReefFishStability and copy there the downloaded files from the same named folder;
 2) create a folder in your workspace named ReefFishStability; the workspace folder should be in the home directory ~/workspace/ReefFishStability/;
 3) copy all other folders (DataManagement, MasterR and Run_analysis) in ~/workspace/ReefFishStability/.
-4) run code in the following order to matche the results as presented in the paper: alpha_stability.R, pSEM.R, sampling_coverage.R, thermal_affinity.R, gamma_stability.R, numm_models.R
+4) run code in the following order to match the results as presented in the paper: alpha_stability.R, pSEM.R, thermal_affinity.R, gamma_stability.R, null_models.R
 
 ## Description of files
  - Data_ReefFishStability: includes the raw data and derived data files for downstream analysis (this allows you to skip some slow computations that were originally performed on an HPC). 
