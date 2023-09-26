@@ -1,16 +1,12 @@
 #### ---- Piecewise Sctrutural Equation Mmdels on alpha stability data ---- ####
 
 # load required libraries
-require(dplyr)
-require(tidyr)
+require(tidyverse)
 require(piecewiseSEM)
 require(semEff)
 require(lme4)
 require(lmerTest)
-require(forcats)
-require(stringr)
 require(datawizard)
-require(ggplot2)
 require(fishualize)
 
 # load results of alpha stability analysis
