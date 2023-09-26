@@ -396,7 +396,7 @@ figs4 <- ggarrange(
 		label.x=0.1
 )
 
-windows(width=12,height=8)
+#windows(width=12,height=8)
 figs4
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS4.pdf",
@@ -459,7 +459,7 @@ figs5 <- ggarrange(
 		label.x=0.05
 )
 
-windows(width=8,height=4)
+#windows(width=8,height=4)
 figs5
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
@@ -589,7 +589,7 @@ div.coverage <- ggarrange(
 )
 
 
-windows(width=7, height=4)
+#windows(width=7, height=4)
 div.coverage
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS6.pdf",
