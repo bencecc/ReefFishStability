@@ -153,7 +153,7 @@ figs8 <- ggarrange(
 		label.x=0.02
 )
 
-windows(width=6,height=4)
+#windows(width=6,height=4)
 figs8
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS8.lmer.pdf",
@@ -249,7 +249,7 @@ fig4 <- ggarrange(
 )
 
 
-windows(width=8,height=4)
+#windows(width=8,height=4)
 fig4_h
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig4.pdf",
@@ -298,7 +298,7 @@ troph.sil <- ggplot(data.frame(x=1:10, y=1:10), aes(x=x, y=y)) +
 		
 		theme_void()
 
-windows(width=20, height=20)
+#windows(width=20, height=20)
 plot(troph.sil)		
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/troph.sil_col.pdf",
