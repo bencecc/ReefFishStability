@@ -3,7 +3,6 @@
 # site_plot_func to fit lmer models to stability data
 # seprately for MPAs and OAs or two-way models that include
 # interactions with MPAs vs OAs, respectively
-# Author: Lisandro Bendetti-Cecchi
 ###############################################################################
 
 annotate_stats <- function(mod, cov, r2=r2, ...) {
