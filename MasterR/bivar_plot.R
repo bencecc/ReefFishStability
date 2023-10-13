@@ -2,7 +2,6 @@
 # examining bivariate relations of stability separately
 # between levels of protection (MPAs vs OAs). Use in
 # combinaiton with function annotate_stats. 
-# Author: Lisandro Bendetti-Cecchi
 ##############################################################
 
 bivar_plot <- function(fn, df, x.lab=T, y.lab=T, y.lim=NULL, r2=FALSE, plot=F) {
@@ -59,7 +58,7 @@ bivar_plot <- function(fn, df, x.lab=T, y.lab=T, y.lim=NULL, r2=FALSE, plot=F) {
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -79,7 +78,7 @@ bivar_plot <- function(fn, df, x.lab=T, y.lab=T, y.lim=NULL, r2=FALSE, plot=F) {
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 	} else {x.lab <- NULL}
 	
