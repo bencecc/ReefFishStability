@@ -21,6 +21,7 @@ source("~/workspace/ReefFishStability/MasterR/sep_fit_plot.R") # separate model 
 source("~/workspace/ReefFishStability/MasterR/site_plot_func.R") # fit interactions between covariates x MPA vs. OA
 source("~/workspace/ReefFishStability/MasterR/onevar_fit_plot.R") # plot relationships with offset variable
 source("~/workspace/ReefFishStability/MasterR/annotate_stats.R") # annotate plots with statistics
+source("~/workspace/ReefFishStability/MasterR/plot.iNEXT.rar.R") # plotting function for iNEXT data to assess sampling completeness
 
 # prepare data for analysis
 test.dat <- site_fish_stab %>% 
