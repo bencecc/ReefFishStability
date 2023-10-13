@@ -2,7 +2,6 @@
 # examining interactions between stability and level of
 # protection (MPAs vs OAs). Use in combinaiton with function
 # annotate_stats. The funciton returns prediciotns if plot=F.
-# Author: Lisandro Bendetti-Cecchi
 ###############################################################################
 
 # require(mgcv) # for fitting gams
@@ -127,7 +126,7 @@ site_plot_gam <- function(gam.fit, x.lab=T, y.lab=T, r2=F, plot=F, ...) {
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -147,7 +146,7 @@ site_plot_gam <- function(gam.fit, x.lab=T, y.lab=T, r2=F, plot=F, ...) {
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 	} else {x.lab <- NULL}
 	
