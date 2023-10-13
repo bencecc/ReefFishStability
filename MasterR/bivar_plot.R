@@ -134,7 +134,7 @@ bivar_plot <- function(fn, df, x.lab=T, y.lab=T, y.lim=NULL, r2=FALSE, plot=F) {
 	}
 	
 	if(plot) {
-		windows(height=3, width=3)
+		#windows(height=3, width=3)
 		plot(p)
 	}
 	
