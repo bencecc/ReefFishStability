@@ -19,6 +19,7 @@ load("site_fish_stab.RData")
 # source functions
 source("~/workspace/ReefFishStability/MasterR/sep_fit_plot.R") # separate model fits for MPAs and OAs
 source("~/workspace/ReefFishStability/MasterR/site_plot_func.R") # fit interactions between covariates x MPA vs. OA
+source("~/workspace/ReefFishStability/MasterR/onevar_fit_plot.R") # plot relationships with offset variable
 source("~/workspace/ReefFishStability/MasterR/annotate_stats.R") # annotate plots with statistics
 
 # prepare data for analysis
@@ -403,6 +404,22 @@ ggsave(file = "~/Data_ReefFishStability/Figs/FigS4.pdf",
 		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
 
 #### ---- Sensitivity analysis for the offset ---- ####
+
+# test for linear relationships
+off.stab <- lmer(STAB ~ AREA + (1|ID), REML=F, data=test.dat)
+summary(off.stab)
+off.spstab <- lmer(SP.STAB ~ AREA + (1|ID), REML=F, data=test.dat)
+summary(off.spstab)
+
+x_range <- function(x) {
+	xr <- range(x)
+	seq(xr[1], xr[2], length.out=10)
+}
+
+off.stab.plot <- onevar_fit_plot(model=off.stab, r2=T, plot=F)
+off.spstab.plot <- onevar_fit_plot(model=off.spstab, r2=T, plot=F)
+
+# assess robustness to transformations of the response and offset variables
 # remove standardization for stability measures and the offset and use log-transformed data
 # to express the scaled stability response variables as rates (log-ratios) rather than as
 # differences; show relations of stability with MHW.
@@ -452,9 +469,10 @@ spstab1.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.ra
 # FigS5
 figs5 <- ggarrange(
 		alpha1.mhw[[1]], spstab1.mhw[[1]],
-		ncol=2, nrow=1,
+		off.stab.plot[[1]], off.spstab.plot[[1]],
+		ncol=2, nrow=2,
 		align="hv",
-		labels=c("a","b"),
+		labels=c("a","b","c","d"),
 		font.label = list(size = 10),
 		label.x=0.05
 )
@@ -463,7 +481,7 @@ figs5 <- ggarrange(
 figs5
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
-		dpi = 300, width = 100, height = 50, units="mm", device=cairo_pdf)
+		dpi = 300, width = 95, height = 80, units="mm", device=cairo_pdf)
 
 #### ---- Correlation among functional diversity indices ---- ####
 
