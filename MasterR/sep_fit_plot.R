@@ -2,7 +2,6 @@
 # examining bivariate relations of stability separately
 # between levels of protection (MPAs vs OAs). Use in
 # combinaiton with function annotate_stats. 
-# Author: Lisandro Bendetti-Cecchi
 ##############################################################
 
 sep_fit_plot <- function(df,
@@ -94,7 +93,7 @@ sep_fit_plot <- function(df,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -114,7 +113,7 @@ sep_fit_plot <- function(df,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 	} else {x.lab <- NULL}
 	
@@ -147,7 +146,6 @@ sep_fit_plot <- function(df,
 #					fill=mycol[5], alpha=0.15)+
 			scale_fill_fish_d(option = "Cirrhilabrus_solorensis", begin=0.95, end=0.05, direction=1) +
 			scale_color_fish_d(option = "Cirrhilabrus_solorensis", begin=0.95, end=0.05, direction=1) +
-			theme_sjplot(base_family="arial")+
 			set_theme(base=theme_bw(),
 					legend.pos="none")+
 			theme(
