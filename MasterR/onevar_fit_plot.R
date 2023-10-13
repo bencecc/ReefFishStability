@@ -19,13 +19,6 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 		seq(xr[1], xr[2], length.out=10)
 	}
 	
-# To limit x range for predictions to observed values seprarately for protected and unprotected zones; 
-# currently set for full range
-#	x.range.mpa <- (mf %>% filter(MPA=="Protected") %>% summarise(range=range(.data[[cov]])))$range
-#	x.range.oa <- (mf %>% filter(MPA=="Unprotected") %>% summarise(range=range(.data[[cov]])))$range
-#	x.mpa <- seq(x.range.mpa[1], x.range.mpa[2], length.out=10)
-#	x.oa <- seq(x.range.oa[1], x.range.oa[2], length.out=10)
-	
 	model.eff <- ggpredict(model,
 					terms=paste(cov, "[x_range]", sep=" "),
 					ci.lvl=0.95) %>%
@@ -52,7 +45,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -73,7 +66,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 	} else {x.lab <- NULL}
 	
@@ -111,7 +104,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 	
 	
 	if(plot) {
-		windows(height=3, width=3)
+		#windows(height=3, width=3)
 		plot(p)
 	}
 	
