@@ -168,7 +168,7 @@ sep_fit_plot <- function(df,
 	}
 	
 	if(plot) {
-		windows(height=3, width=3)
+		#windows(height=3, width=3)
 		plot(p)
 	}
 	
