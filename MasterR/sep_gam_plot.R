@@ -2,7 +2,6 @@
 # examining interactions between stability and level of
 # protection (MPAs vs OAs). Use in combinaiton with function
 # annotate_stats. The funciton returns prediciotns if plot=F.
-# Author: Lisandro Bendetti-Cecchi
 ###############################################################################
 
 # require(mgcv) # for fitting gams
