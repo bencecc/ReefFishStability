@@ -163,7 +163,7 @@ sep_gam_plot <- function(df,
 			labs(y=y.lab, x=x.lab)
 	
 	if(plot) {
-		windows(height=3, width=3)
+		#windows(height=3, width=3)
 		plot(p)
 	} else {
 		
