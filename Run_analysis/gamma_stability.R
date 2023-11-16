@@ -743,9 +743,7 @@ phy.cent.df.tmp <- phy.conn.net %>%
 
 cent.df <- as_tibble(cbind(jacc.cent.df.tmp,
 						phy.closeness=phy.cent.df.tmp[,2],
-						phy.degree=phy.cent.df.tmp[,3],
-						mean.jacc.dist[,c(2,4)])) %>% 
-		relocate(c("SITE_ID","MPA"), .after="ID")
+						phy.degree=phy.cent.df.tmp[,3]))
 
 # Results for Supplementary Table 6
 lm.test.centrality <- cent.df %>%
