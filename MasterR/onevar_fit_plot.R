@@ -1,15 +1,22 @@
 # Utility function to plot results from one-way lmer models
 ##############################################################
 
-onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
-		symb.shape=21, r2=FALSE, plot=F, ...) {
+onevar_fit_plot <- function(model, cov=NULL, x.lab=T, y.lab=T,
+		symb.shape=21, r2=FALSE, plot=F, y.lim=NULL, ...) {
 	
-	mf <- model@frame
+	if(class(model)=="lm") {
+		mf <- model$model
+	} else {
+		mf <- model@frame
+	}
+	
 	fm <- formula(model)
 	str <- strsplit(as.character(fm), split=c('* ~'))
 	resp <- str[[2]][1]
-	cov <- attr(terms(model), 'term.labels')[1]
 	
+	if(is.null(cov)) {
+		cov <- attr(terms(model), 'term.labels')[1]
+	}
 	
 	#### ---- PREDICITONS FOR FITTING ---- ####
 	# To fit lines only within data range
@@ -24,10 +31,18 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 					ci.lvl=0.95) %>%
 			rename(Cov=x, Pred=predicted)
 	
-	minmax.data <- mf %>% group_by(ID) %>%
+	if(class(model)=="lm") {
+		
+		minmax.data <- mf %>%
+				summarise(
+						cov.min=min(.data[[cov]], na.rm=T),
+						cov.max=max(.data[[cov]], na.rm=T), .groups = "drop")			
+	} else {
+		minmax.data <- mf %>% group_by(ID) %>%
 			summarise(
 					cov.min=min(.data[[cov]], na.rm=T),
 					cov.max=max(.data[[cov]], na.rm=T), .groups = "drop")
+	}
 	
 	mycol <- fish(5, option="Cirrhilabrus_solorensis",
 			begin=0.95, end=0.05, direction=1)
@@ -38,6 +53,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 				resp,
 				"STAB"=(expression(paste(alpha, " stability", sep=" "))),
 				"ASYNC"="Species asynchrony",
+				"ASYNC_LM"="Species asynchrony",
 				"SP.STAB"="Species stability",
 				"SR"="Species richness",
 				"FRIC"="Functional richness",
@@ -45,7 +61,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -66,7 +82,7 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)"
 		)
 	} else {x.lab <- NULL}
 	
@@ -82,13 +98,13 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 	y2 <-  y.shift - 0.12*diff(yrange)
 	
 	p <- ggplot(data=mf, aes(x=.data[[cov]], y=.data[[resp]]))+
-			geom_point(shape=symb.shape, col="#46A9BE", alpha=0.1, size=0.8)+
-			geom_line(data=model.eff, aes(x=Cov, y=Pred), color="#46A9BE", linewidth=1) +
-			annotate("text", x = x1, y = y1, hjust=0, vjust=1, label = mod.stats[[1]], parse=T, size=2, col="#46A9BE") +
-			annotate("text", x = x2, y = y1, hjust=0, vjust=0.7, label = mod.stats[[2]], parse=T, size=2, col="#46A9BE") +
+			geom_point(shape=symb.shape, col="#9999CC", alpha=0.1, size=0.8)+
+			geom_line(data=model.eff, aes(x=Cov, y=Pred), color="#9999CC", linewidth=1) +
+			annotate("text", x = x1, y = y1, hjust=0, vjust=1, label = mod.stats[[1]], parse=T, size=2, col="#9999CC") +
+			annotate("text", x = x2, y = y1, hjust=0, vjust=0.7, label = mod.stats[[2]], parse=T, size=2, col="#9999CC") +
 			scale_size_manual(values=c(1,1))+	
 			geom_ribbon(data=model.eff, aes(x=Cov, y=Pred, ymin=conf.low,ymax=conf.high),
-					fill="#46A9BE", alpha=0.5)+
+					fill="#9999CC", alpha=0.5)+
 			set_theme(base=theme_bw(),
 					legend.pos="none")+
 			theme(
@@ -102,9 +118,13 @@ onevar_fit_plot <- function(model, x.lab=T, y.lab=T,
 			) +
 			labs(y=y.lab, x=x.lab)
 	
+	if(!is.null(y.lim)) {
+		
+		p <- p + coord_cartesian(ylim=y.lim)
+	}
 	
 	if(plot) {
-		#windows(height=3, width=3)
+		windows(height=3, width=3)
 		plot(p)
 	}
 	
