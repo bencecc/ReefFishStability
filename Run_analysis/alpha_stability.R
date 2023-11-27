@@ -405,30 +405,24 @@ ggsave(file = "~/Data_ReefFishStability/Figs/FigS4.pdf",
 		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
 
 #### ---- Sensitivity analysis for the offset ---- ####
+# Alternative analysis to control for sampling effort using log-response ratios
+# obtained by dividing each response variable directly by the total area sampled
+# at each site, instead of using an offset. The two approaches (offset vs. log-response
+# ratios) are equivalent in gaussian linear models. This equivalence does not hold for
+# generalized models (Crawley M.J. 2013. The R Book. Wiley, Second Edition, p. 415 and
+# p. 566). The analysis below shows this equivalence (consistent results), which means
+# that we could have examined log-response ratios directly instead of using the offset
+# in the paper. We opted to present results based on the offset in the main text, since
+# standardization improved data visualization. The use of an offset assumes that there
+# is a significant linear relationhip between sampling effort and the response variable,
+# with a fixed coefficient of 1. The analysis of log-response ratios does not assign
+# any fixed coefficient to sampling effort, since it is part of the response variable.
 
-# test for linear relationships
-off.stab <- lmer(STAB ~ AREA + (1|ID), REML=F, data=test.dat)
-summary(off.stab)
-off.spstab <- lmer(SP.STAB ~ AREA + (1|ID), REML=F, data=test.dat)
-summary(off.spstab)
-
-x_range <- function(x) {
-	xr <- range(x)
-	seq(xr[1], xr[2], length.out=10)
-}
-
-off.stab.plot <- onevar_fit_plot(model=off.stab, r2=T, plot=F)
-off.spstab.plot <- onevar_fit_plot(model=off.spstab, r2=T, plot=F)
-
-# assess robustness to transformations of the response and offset variables
-# remove standardization for stability measures and the offset and use log-transformed data
-# to express the scaled stability response variables as rates (log-ratios) rather than as
-# differences; show relations of stability with MHW.
-# NOTE: remove offset from function sep_fit_plot for resp=STAB and resp=SP.STAB
-# before running this analysis
+# IMPORTANT: remove the offset from the models in function sep_fit_plot before running
+# this analysis and remember to place the offset back once terminated.
 
 #### ALPHA STAB  ####
-test.dat <- site_fish_stab %>% 
+alpha.dat <- site_fish_stab %>% 
 		mutate(
 				STAB=log(1/CV_TOT_ABUND/SAMPLED_AREA),
 				SP.STAB=standardize(log(1/CV_SP_ABUND)),
@@ -437,19 +431,21 @@ test.dat <- site_fish_stab %>%
 				SR=standardize(N_SPEC),
 				MHW=standardize(MHW),
 				REMOTENESS=standardize(REMOTENESS),
-				#AREA=log(SAMPLED_AREA),
-				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
-				SD.ABUND=standardize(log(SD_TOT_ABUND)),
-				MPA=fct_relevel(MPA,
+					MPA=fct_relevel(MPA,
 						c("Unprotected","Protected"))
 		) 		
 
-# MHW
-x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-alpha1.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+x.range <- (alpha.dat %>% summarise(range=range(ASYNC)))$range
+alpha1.async <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
+x.range <- (alpha.dat %>% summarise(range=range(SP.STAB)))$range
+alpha1.spstab <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="SP.STAB", x.range=x.range, r2=F, y.lab=F, plot=F)
+x.range <- (alpha.dat %>% summarise(range=range(MHW)))$range
+alpha1.mhw <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="MHW", x.range=x.range, r2=F, y.lab=F, plot=F)
+x.range <- (alpha.dat %>% summarise(range=range(REMOTENESS)))$range
+alpha1.remot <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
 
 #### SP.STAB ####
-test.dat <- site_fish_stab %>% 
+sp.dat <- site_fish_stab %>% 
 		mutate(
 				SP.STAB=log(1/CV_SP_ABUND/SAMPLED_AREA),
 				ASYNC=standardize(ASYNC_GROSS_W),
@@ -457,32 +453,65 @@ test.dat <- site_fish_stab %>%
 				SR=standardize(N_SPEC),
 				MHW=standardize(MHW),
 				REMOTENESS=standardize(REMOTENESS),
-				#AREA=log(SAMPLED_AREA),
-				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
-				SD.ABUND=standardize(log(SD_TOT_ABUND)),
 				MPA=fct_relevel(MPA,
 						c("Unprotected","Protected"))
 		) 		
-# MHW 
-x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-spstab1.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+x.range <- (sp.dat %>% summarise(range=range(MHW)))$range
+spstab1.mhw <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+x.range <- (sp.dat %>% summarise(range=range(REMOTENESS)))$range
+spstab1.remot <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+
+#### ASYNCHRONY ####
+async.dat <- site_fish_stab %>% 
+		mutate(
+				ASYNC=log(ASYNC_LOREAU/SAMPLED_AREA), # use LM for asynchrony, which can be log-transfoermed (range 0-1)
+				FRIC=standardize(mFRic),
+				SR=standardize(N_SPEC),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
+
+x.range <- (async.dat %>% summarise(range=range(FRIC)))$range
+async1.fric <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
+x.range <- (async.dat %>% summarise(range=range(MHW)))$range
+async1.mhw <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="MHW", x.range=x.range, r2=F, plot=F)
+x.range <- (async.dat %>% summarise(range=range(REMOTENESS)))$range
+async1.remot <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+
+#### FUNCTIONAL RICHNESS ####
+fric.dat <- site_fish_stab %>% 
+		mutate(
+				FRIC=log(mFRic/SAMPLED_AREA),
+				SR=standardize(N_SPEC),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
+x.range <- (fric.dat %>% summarise(range=range(MHW)))$range
+fric1.mhw <- sep_fit_plot(df=fric.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
+x.range <- (fric.dat %>% summarise(range=range(REMOTENESS)))$range
+fric1.remot <- sep_fit_plot(df=fric.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
 
 # FigS5
 figs5 <- ggarrange(
-		alpha1.mhw[[1]], spstab1.mhw[[1]],
-		off.stab.plot[[1]], off.spstab.plot[[1]],
-		ncol=2, nrow=2,
+		alpha1.async[[1]], alpha1.spstab[[1]], alpha1.mhw[[1]], alpha1.remot[[1]],
+		spstab1.mhw[[1]], spstab1.remot[[1]], fric1.mhw[[1]], fric1.remot[[1]],
+		async1.fric[[1]], async1.mhw[[1]], async1.remot[[1]],
+		ncol=4, nrow=3,
 		align="hv",
-		labels=c("a","b","c","d"),
+		labels=c("a","b","c","d","e","f","g","h","i","j","k"),
 		font.label = list(size = 10),
-		label.x=0.05
+		label.x=0.1
 )
 
-#windows(width=8,height=4)
+#windows(width=12,height=8)
 figs5
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
-		dpi = 300, width = 95, height = 80, units="mm", device=cairo_pdf)
+		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
 
 #### ---- Correlation among functional diversity indices ---- ####
 
@@ -503,6 +532,64 @@ cor.test(site_fish_stab$mFEv, site_fish_stab$mFOri)
 
 cor.test(site_fish_stab$mFDis, site_fish_stab$mFSpe)
 cor.test(site_fish_stab$mFDis, site_fish_stab$mFOri)
+
+# Sensitivity analysis to assess the robustness of results to the varying levels of taxonomic
+# scope used by different sampling programs (IDs). Most programs provide exhaustive species
+# lists, but some use pre-determined target lists. Here, only sampling programs targeting
+# more than 50 species are included and the relationships of alpha and species stability,
+# asynchrony and functional richenss with MHWs is reassessed for MPAs and OAs.
+
+# Calculate the total number of species targeted by each sampling program; use
+# master.fish.dat, but filter for the sites used in the alpha stability analysis.
+n.sp <- master.fish.dat %>%
+		filter(SITE_ID%in%site_fish_stab$SITE_ID) %>%
+		group_by(ID) %>%
+		distinct(SPECIES, .keep_all=T) %>%
+		mutate(n.sp=n()) %>%
+		distinct(ID, .keep_all=T) %>% ungroup() %>%
+		select(ID, n.sp)
+
+# remove IDs with 50 species or less
+sp.red <- n.sp %>% filter(n.sp>50) %>%
+		mutate(ID=as.factor(ID))
+
+# repeat analysis and extract main results (MHWs) 
+red.dat <- site_fish_stab %>% 
+		mutate(
+				STAB=standardize(log(1/CV_TOT_ABUND)),
+				SP.STAB=standardize(log(1/CV_SP_ABUND)),
+				ASYNC=standardize(ASYNC_GROSS_W),
+				FRIC=standardize(mFRic),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				AREA=standardize(log(SAMPLED_AREA)),
+				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
+				SD.ABUND=standardize(log(SD_TOT_ABUND)),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) %>% filter(ID%in%sp.red$ID)	
+
+x.range <- (red.dat %>% summarise(range=range(MHW)))$range
+alpha.stab.mhw.red <- sep_fit_plot(df=red.dat, resp="STAB", cov="MHW", x.range=x.range, r2=T, y.lab=T, plot=F)
+alpha.spstab.mhw.red <- sep_fit_plot(df=red.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, y.lab=T, plot=F)
+async.mhw.red <- sep_fit_plot(df=red.dat, resp="ASYNC", cov="MHW", x.range=x.range, r2=T, y.lab=T, plot=F)
+fric.mhw.red <- sep_fit_plot(df=red.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, y.lab=T, plot=F)
+
+figs6 <- ggarrange(
+		alpha.stab.mhw.red[[1]], alpha.spstab.mhw.red[[1]],
+		async.mhw.red[[1]], fric.mhw.red[[1]],
+		ncol=2, nrow=2,
+		align="hv",
+		labels=c("a","b","c","d"),
+		font.label = list(size = 10),
+		label.x=0.12
+)
+
+#windows(width=6,height=5)
+figs6
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS6.pdf",
+		dpi = 300, width = 110, height = 90, units="mm", device=cairo_pdf)
 
 #### ---- Check sampling completeness by transect size ---- ####
 # load data
@@ -611,7 +698,7 @@ div.coverage <- ggarrange(
 #windows(width=7, height=4)
 div.coverage
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS6.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS7.pdf",
 		dpi = 300, width = 7, height = 4, useDingbats=FALSE)
 
 # evaluate proportion of transects in the 180 m^2 category.
