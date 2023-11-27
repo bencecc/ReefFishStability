@@ -1,7 +1,7 @@
 # Utility function to convert a network to a data frame for plotting with ggplot
 # or to directly plot the network. The first option is appropriate to combine
-# data for different metacommunity networks and to plot the with faceting. 
-# The funciton also return network statistics (degree and cloeseness centrality
+# data for different metacommunity networks and to plot them with faceting. 
+# The function also returns network statistics (degree and cloeseness centrality
 # that can be used to fill network nodes or set their size.
 ###############################################################################
 
@@ -10,10 +10,8 @@ ggplot_igraph <- function(plot.graph, MPA, net.name, mpa.extent, net.extent, con
 	# compute centrality metrics (i.e. degree and closeness centrality)
 	cc.tmp <- igraph::closeness(plot.graph, normalize=T)
 	cc <- cc.tmp/sum(cc.tmp) # rescale
-	dc.tmp <- igraph::degree(plot.graph, normalize=F, mode="all")
+	dc.tmp <- igraph::degree(plot.graph, normalize=T)
 	dc <- dc.tmp/sum(dc.tmp) # rescale
-	# minumum spanning treee
-	# inet <- mst(inet.tmp)
 	
 	# set graphical parameters
 	pal <- fish(2, option = "Cirrhilabrus_solorensis", begin=0.05, end=0.95, direction=1)
@@ -32,6 +30,7 @@ ggplot_igraph <- function(plot.graph, MPA, net.name, mpa.extent, net.extent, con
 	my.layout$net.extent <- V(plot.graph)$net.extent
 	my.layout$cc <- V(plot.graph)$cc
 	my.layout$dc <- V(plot.graph)$dc
+	my.layout$MPA <-  V(plot.graph)$MPA
 	edge.info <- get.data.frame(plot.graph) 
 	edge.info$from.x <- my.layout$V1[match(edge.info$from, my.layout$node.id)]  
 	edge.info$from.y <- my.layout$V2[match(edge.info$from, my.layout$node.id)]
@@ -39,14 +38,14 @@ ggplot_igraph <- function(plot.graph, MPA, net.name, mpa.extent, net.extent, con
 	edge.info$to.y <- my.layout$V2[match(edge.info$to, my.layout$node.id)]
 	
 	if(plot) {
-		out <- ggplot(data=g3, aes(x=V1, y=V2))+
+		out <- ggplot(data=my.layout, aes(x=V1, y=V2))+
 			geom_segment(data=edge.info, aes(x=from.x,xend = to.x, y=from.y,yend = to.y),
 					linewidth=0.8, colour="darkgrey")+
 			geom_point(aes(color=color), alpha=1, size=1.5)+
 			labs(x="", y="",
 					subtitle=paste(net.name, " (GC = ", round(mean(cc), conn.dec), ")", sep="")) +
 			theme_bw() +
-			facet_wrap(.~ID) +
+			#facet_wrap(.~ID) +
 			theme(
 					legend.position="none",
 					strip.background=element_rect(colour="grey90",
@@ -66,7 +65,14 @@ ggplot_igraph <- function(plot.graph, MPA, net.name, mpa.extent, net.extent, con
 			
 		} else {
 			
-			out <- cbind(ID=net.name, MPA=MPA, my.layout, rbind(edge.info, NA))
+			#all.edge.info <- rbind(edge.info, NA)
+			all.graph.info <- my.layout %>% rename(from=node.id) %>%
+					mutate(from=as.character(from)) %>%
+					full_join(edge.info, by="from") %>%
+					relocate(from, .before=to) %>%
+					rename(from.y=from.y.y)
+			
+			out <- cbind(ID=net.name, all.graph.info)
 			
 		}
 #	clos.cent <- data.frame(ID=net.name, METRIC_TYPE="Closeness", centrality=cc)

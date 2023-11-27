@@ -2,6 +2,7 @@
 # examining bivariate relations of stability separately
 # between levels of protection (MPAs vs OAs). Use in
 # combinaiton with function annotate_stats. 
+# Author: Lisandro Bendetti-Cecchi
 ##############################################################
 
 sep_fit_plot <- function(df,
@@ -18,38 +19,34 @@ sep_fit_plot <- function(df,
 	oa.dat <- df %>% dplyr::filter(MPA=="Unprotected")
 
 	if(resp=="STAB") {
-		mpa.mod <- lmer(STAB ~ ASYNC + SP.STAB + FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=mpa.dat, REML=FALSE)
-		oa.mod <- lmer(STAB ~ ASYNC + SP.STAB + FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=oa.dat, REML=FALSE)
+		mpa.mod <- lmer(STAB ~ ASYNC + SP.STAB + FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=mpa.dat, REML=FALSE)
+		oa.mod <- lmer(STAB ~ ASYNC + SP.STAB + FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=oa.dat, REML=FALSE)
 	}
 	
 	if(resp=="ASYNC"){
-		mpa.mod <- lmer(ASYNC ~ FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=mpa.dat, REML=FALSE)
-		oa.mod <- lmer(ASYNC ~ FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=oa.dat, REML=FALSE)		
+		
+		mpa.mod <- lmer(ASYNC ~ FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=mpa.dat, REML=FALSE)
+		oa.mod <- lmer(ASYNC ~ FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=oa.dat, REML=FALSE)		
 	}
 	
 	if(resp=="SP.STAB") {
-		mpa.mod <- lmer(SP.STAB ~ FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=mpa.dat, REML=FALSE)
-		oa.mod <- lmer(SP.STAB ~ FRIC + MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=oa.dat, REML=FALSE)
+		
+		mpa.mod <- lmer(SP.STAB ~ FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=mpa.dat, REML=FALSE)
+		oa.mod <- lmer(SP.STAB ~ FRIC + MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=oa.dat, REML=FALSE)
 	}
 	
-#	if(resp=="SR") {
-#		mpa.mod <- lmer(SR ~ MHW + REMOTENESS + (1|ID) +
-#						offset(AREA), data=mpa.dat, REML=FALSE)
-#		oa.mod <- lmer(SR ~ MHW + REMOTENESS + (1|ID) +
-#						offset(AREA), data=oa.dat, REML=FALSE)
-#	}
-	
 	if(resp=="FRIC") {
-		mpa.mod <- lmer(FRIC ~ MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=mpa.dat, REML=FALSE)
-		oa.mod <- lmer(FRIC ~ MHW + REMOTENESS + (1|ID) +
-						offset(AREA), data=oa.dat, REML=FALSE)
+		
+		mpa.mod <- lmer(FRIC ~ MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=mpa.dat, REML=FALSE)
+		oa.mod <- lmer(FRIC ~ MHW + REMOTENESS + (1|ID) + offset(AREA),
+				data=oa.dat, REML=FALSE)
 	}
 	
 	if(resp=="MEAN.ABUND") {
@@ -93,7 +90,7 @@ sep_fit_plot <- function(df,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -113,7 +110,7 @@ sep_fit_plot <- function(df,
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)"
 		)
 	} else {x.lab <- NULL}
 	
@@ -168,11 +165,9 @@ sep_fit_plot <- function(df,
 	}
 	
 	if(plot) {
-		#windows(height=3, width=3)
+		windows(height=3, width=3)
 		plot(p)
-	}
-	
-	else {
+	} else {
 		
 		mpa.tab <- tab_model(mpa.mod,  show.stat=T, show.ci=F, show.se=T)	
 		oa.tab <- tab_model(oa.mod,  show.stat=T, show.ci=F, show.se=T)
