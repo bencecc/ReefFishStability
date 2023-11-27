@@ -410,7 +410,7 @@ p.semeff.gross.det <- ggplot(plot.semeff.dat,
 p.semeff.gross.det
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS7a.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS8a.pdf",
 		dpi = 300, width = 5, height = 7, useDingbats=FALSE)
 
 # SQRT(LOREAU_DEMAZANCOURT)
@@ -557,7 +557,7 @@ p.semeff.loreau.sqrt <- ggplot(plot.semeff.dat,
 p.semeff.loreau.sqrt
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS7b.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS8b.pdf",
 		dpi = 300, width = 5, height = 7, useDingbats=FALSE)
 
 
