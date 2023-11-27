@@ -223,7 +223,7 @@ meta.dist.nullres %>%
 				axis.title.x = element_text(size = 12, colour = "black"))
 
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS13.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS14.pdf",
 		dpi = 300, width = 8, height = 10, useDingbats=FALSE)
 
 
