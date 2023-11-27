@@ -474,7 +474,7 @@ p.meta.async <- metastab.df %>% filter(METRIC_TYPE=="Asynchrony") %>%
 #windows(width=8, height=6)
 p.meta.async
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS11b.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS12b.pdf",
 		dpi = 300, width = 8, height = 6, useDingbats=FALSE)
 
 # Summary of characteristics of metacommunities - Supplementary Table 5
@@ -543,7 +543,6 @@ kable(metajacc.res)
 
 # load required libraries
 require(igraph)
-require(SteinerNet) # to obtain the shortest path percolation graph
 
 # load data 
 setwd("~/Data_ReefFishStability")
@@ -603,13 +602,9 @@ jacc.conn.net.tmp <- foreach(i=1:length(ecoreg)) %dopar% {
 	jacc.dist <- vegan::vegdist(jacc.df[,which(colSums(jacc.df)>0)], method="jaccard", binary=T) 
 	jacc.mat <- as.matrix(jacc.dist)
 	jacc.net.tmp <- graph.adjacency(jacc.mat, mode='undirected', weighted=TRUE)
-	# use steinertree to find a minimum weight tree that keeps all the nodes connected
-	jacc.stn.tmp <- steinertree(type = "SP", terminals = as.vector(V(jacc.net.tmp)),
-			graph = jacc.net.tmp, color = FALSE, merge = FALSE)
-	jacc.inet <- jacc.stn.tmp[[1]]
+	jacc.inet <- mst(jacc.net.tmp, weights = NULL, algorithm = NULL)
 	jacc.inet.plot <- ggplot_igraph(plot.graph=jacc.inet, MPA=ecoreg.dat$MPA,
 			mpa.extent=ecoreg.dat$DIST[1], net.extent=ecoreg.dat$DIST_RANGE[1], net.name=ecoreg[i])
-
 }
 
 jacc.conn.net <- bind_rows(jacc.conn.net.tmp) %>%
@@ -617,7 +612,7 @@ jacc.conn.net <- bind_rows(jacc.conn.net.tmp) %>%
 		IDlabel=fct_reorder(IDlabel, mpa.extent, mean)
 )
 
-figs9 <- ggplot(data=jacc.conn.net , aes(x=V1, y=V2))+
+figs10 <- ggplot(data=jacc.conn.net , aes(x=V1, y=V2))+
 		geom_segment(data=na.exclude(jacc.conn.net),
 				aes(x=from.x,xend = to.x, y=from.y,yend = to.y),
 				linewidth=1, colour="darkgrey") +
@@ -644,9 +639,9 @@ figs9 <- ggplot(data=jacc.conn.net , aes(x=V1, y=V2))+
 		)
 
 #windows(width=8, height=8)
-figs9
+figs10
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS9.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS10.pdf",
 		dpi = 300, width = 160, height = 160, units="mm", device=cairo_pdf)
 
 # networks based on physical distance
@@ -684,13 +679,10 @@ phy.conn.net.tmp <- foreach(i=1:length(id)) %dopar% {
 	dist.dat <- mget(load(file.path('~/Data_ReefFishStability', dist.dat.path)))[[1]]
 	phy.mat <- as.matrix(dist.dat)
 	phy.net.tmp <- graph.adjacency(phy.mat, mode='undirected', weighted=TRUE)
-	# use steinertree to find a minimum weight tree that keeps all the nodes connected
-	phy.stn.tmp <- steinertree(type = "SP", terminals = as.vector(V(phy.net.tmp)),
-			graph = phy.net.tmp, color = FALSE, merge = FALSE)
-	phy.inet <- phy.stn.tmp[[1]]
+	phy.inet <- mst(phy.net.tmp, weights = NULL, algorithm = NULL)
 	phy.inet.plot <- ggplot_igraph(plot.graph=phy.inet, MPA=ecoreg.dat$MPA,
-			mpa.extent=net.size$DIST, net.extent=net.size$DIST_RANGE, net.name=net.name,)	
-	
+			mpa.extent=net.size$DIST, net.extent=net.size$DIST_RANGE, net.name=net.name)	
+
 }
 
 phy.conn.net <- bind_rows(phy.conn.net.tmp) %>%
@@ -698,7 +690,7 @@ phy.conn.net <- bind_rows(phy.conn.net.tmp) %>%
 				IDlabel=fct_reorder(IDlabel, mpa.extent, mean)
 		)
 
-figs10 <- ggplot(data=phy.conn.net , aes(x=V1, y=V2))+
+figs11 <- ggplot(data=phy.conn.net , aes(x=V1, y=V2))+
 		geom_segment(data=na.exclude(phy.conn.net),
 				aes(x=from.x,xend = to.x, y=from.y,yend = to.y),
 				linewidth=1, colour="darkgrey") +
@@ -725,9 +717,9 @@ figs10 <- ggplot(data=phy.conn.net , aes(x=V1, y=V2))+
 		)
 
 #windows(width=8,height=8)
-figs10
+figs11
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS10.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS11.pdf",
 		dpi = 300, width = 160, height = 160, units="mm", device=cairo_pdf)
 
 # relationships between closenees centrality measured on from physically-derived graphs
@@ -1092,7 +1084,7 @@ p.meta.stab <- metastab.df %>% filter(METRIC_TYPE=="Stability") %>%
 #windows(width=8, height=6)
 p.meta.stab
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS12_stability.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS13_stability.pdf",
 		dpi = 300, width = 8, height = 6, useDingbats=FALSE)
 
 p.meta.async <- metastab.df %>% filter(METRIC_TYPE=="Asynchrony") %>%
@@ -1127,18 +1119,18 @@ p.meta.async <- metastab.df %>% filter(METRIC_TYPE=="Asynchrony") %>%
 #windows(width=8, height=6)
 p.meta.async
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS12_asynchrony.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS13_asynchrony.pdf",
 		dpi = 300, width = 8, height = 6, useDingbats=FALSE)
 
-#figS12 <- ggarrange(
+#figS13 <- ggarrange(
 #		p.meta.stab, p.meta.async,
 #		ncol=1, nrow=2
 #		)
 #
 #windows(width=7,height=10)
-#figS12
+#figS13
 #dev.off()
-#ggsave(file = "~/Data_ReefFishStability/Figs/FigS12.pdf",
+#ggsave(file = "~/Data_ReefFishStability/Figs/FigS13.pdf",
 #		dpi = 300, width = 110, height = 180, units="mm", device=cairo_pdf)
 
 
