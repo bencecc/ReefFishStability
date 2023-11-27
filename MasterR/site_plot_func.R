@@ -154,7 +154,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -174,7 +174,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (°C)"
+				"cti"="Upper thermal niche (Â°C)"
 		)
 	} else {x.lab <- NULL}
 	
