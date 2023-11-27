@@ -45,7 +45,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 		
 		model.eff <- ggpredict(model,
 						terms=c(paste(cov, "[x_range]", sep=" "), "MPA"),
-						condition=c(AREA=off.val),
+						#condition=c(AREA=off.val),
 						ci.lvl=0.95) %>%
 				rename(Cov=x, MPA=group, Pred=predicted)
 	}
@@ -97,21 +97,23 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 		# random intercept and slope
 		else {
 			
-			if(any(colnames(mf)=="offset(AREA)")) {
-				
-				mf <- mf %>% 
-						rename(AREA="offset(AREA)")
-			}
+#			if(any(colnames(mf)=="offset(AREA)")) {
+#				
+#				mf <- mf %>% 
+#						rename(AREA="offset(AREA)")
+#			}
 			
 			minmax.data <- mf %>% group_by(MPA,ID) %>%
-					summarise(AREA=mean(AREA),
+					summarise(
+							#AREA=mean(AREA),
 							cov.min=min(.data[[cov]], na.rm=T),
 							cov.max=max(.data[[cov]], na.rm=T), .groups = "drop") %>%
 					select(-"MPA")
 			
 			pred.dat <- mf %>% nest(data = -c(ID, MPA)) %>% 
 					mutate(
-							fit = map(data, ~ lm(!!sym(resp) ~ !!sym(cov) + offset(AREA), data = .x)),
+							fit = map(data, ~ lm(!!sym(resp) ~ !!sym(cov),  #+ offset(AREA),
+											data = .x)),
 							tidied = map(fit, tidy)
 					#glanced = map(fit, glance),
 					#augmented = map(fit, augment)
@@ -125,8 +127,10 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 					#mutate(term=as.factor(term)) %>%
 					#group_by(MPA,ID) %>%
 					left_join(minmax.data, by=c("ID")) %>%				
-					mutate(pred1=Int+AREA+Slope*cov.min,
-							pred2=Int+AREA+Slope*cov.max)
+					mutate(pred1=Int+ #AREA+
+									Slope*cov.min,
+							pred2=Int+ #AREA
+									Slope*cov.max)
 			
 		}
 		
@@ -154,7 +158,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)"
 		)
 		
 	} else {y.lab <- NULL}
@@ -163,6 +167,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 		
 		x.lab <- switch(
 				cov,
+				"AREA"="Area",
 				"MHW"=(expression(paste("MHW intensity (", degree, "C)"))),
 				"REMOTENESS"="Remoteness",
 				"STAB"="Stability",
@@ -174,7 +179,7 @@ site_plot_func <- function(model, x.var=NULL, pred.type="fe",
 				"MEAN.ABUND"="Abundance",
 				"SD.ABUND"="Standard deviation",
 				"STAB.FT"="Stability",
-				"cti"="Upper thermal niche (Â°C)"
+				"cti"="Upper thermal niche (°C)",
 		)
 	} else {x.lab <- NULL}
 	
