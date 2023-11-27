@@ -138,14 +138,14 @@ test.dat <- raw.fish.dat %>%
 #### ---- ANALYSIS USING lmer ---- ####
 
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-fs8a <- sep_fit_plot(test.dat, resp="MEAN.ABUND", cov="MHW",
+fs9a <- sep_fit_plot(test.dat, resp="MEAN.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
-fs8b <- sep_fit_plot(test.dat, resp="SD.ABUND", cov="MHW",
+fs9b <- sep_fit_plot(test.dat, resp="SD.ABUND", cov="MHW",
 		x.range=x.range, y.lab=T, r2=T, plot=F)
 
-figs8 <- ggarrange(
-		fs8a[[1]], fs8b[[1]],
+figs9 <- ggarrange(
+		fs9a[[1]], fs9b[[1]],
 		ncol=2, nrow=1,
 		align="hv",
 		labels=c("a","b"),
@@ -154,9 +154,9 @@ figs8 <- ggarrange(
 )
 
 #windows(width=6,height=4)
-figs8
+figs9
 dev.off()
-ggsave(file = "~/Data_ReefFishStability/Figs/FigS8.lmer.pdf",
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS9.lmer.pdf",
 		scale=0.9, dpi = 300, width = 95, height = 50, units="mm", device=cairo_pdf)
 
 #### TROPHIC CATEGORIES ####
