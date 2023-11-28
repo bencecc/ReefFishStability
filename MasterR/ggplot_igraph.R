@@ -8,9 +8,19 @@
 ggplot_igraph <- function(plot.graph, MPA, net.name, mpa.extent, net.extent, conn.dec=3, plot=F, ...) {
 	
 	# compute centrality metrics (i.e. degree and closeness centrality)
+	
+	# Weights in function closenes are used for calculating weighted shortest paths, so they are
+	# interpreted as distances in function closeness;  normalized closeness is calculated as the
+	# inverse average distance to all reachable vertices	
 	cc.tmp <- igraph::closeness(plot.graph, normalize=T)
 	cc <- cc.tmp/sum(cc.tmp) # rescale
-	dc.tmp <- igraph::degree(plot.graph, normalize=T)
+
+	# Weights in function strength are the edge attribute of the graph by defauilt - i.e. distances;
+	# to ensure the same normalization as in function closeness - i.e. the inverse of distance - 
+	# weights are first extracted from the graph using function edge_attr and then they are specified
+	# in function strength as 1/distance
+	edge.attr <- edge_attr(plot.graph)
+	dc.tmp <- igraph::strength(plot.graph, weights=1/edge.attr$weights)
 	dc <- dc.tmp/sum(dc.tmp) # rescale
 	
 	# set graphical parameters
