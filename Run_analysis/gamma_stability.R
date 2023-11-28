@@ -129,16 +129,18 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- The original analysis on HPC calculated Gamma stability and asynchorny measures at three distance ranges:       ---- ####
 #### ---- of 0-20, 21-50, 51-100 kms and at the maximum distance between MPAs in an ecoregion. Statistics are included    ---- ####
 #### ---- in the current metastats.res dataset. Below is the code to perform the maximum distance analysis (Fig. 5b.      ---- ####
-#### ---- and Supplementary Fig. 11b.																					  ---- ####
+#### ---- and Supplementary Fig. 12b.											  ---- ####
 #### ---- line 480: Summary of characteristics of metacommunities - Supplementary Table 5                                 ---- ####
 #### ---- line 513: Connectivity assessment - average metacommunity dissimilarity (also in Supplementary Table 5)         ---- ####
 #### ---- CHECKS AND SENSITIVITY ANALYSIS:                                                                                ---- ####
-#### ---- line 542: Connectivity assessment - global network connectivity - Supplementary Figs. 9 and 10                  ---- ####
-#### ---- line 733: relationships between closenees centrality measured on from physically-derived graphs and degree      ---- ####
+#### ---- line 542: Connectivity assessment - global network connectivity - Supplementary Figs. 10 and 11                  ---- ####
+#### ---- line 726: relationships between closenees centrality measured on from physically-derived graphs and degree      ---- ####
 #### ---- centrality from biologically-derived graphs - Results for Supplementary Table 6                                 ---- ####
-#### ---- line 762: relationhsips of stability and asynchony measures with MPA network characterstics (extent,            ---- #### 
+#### ---- line 757: relationhsips of stability and asynchony measures with MPA network characterstics (extent,            ---- #### 
 #### ---- number of MPAs and number of sites) - Results for Supplementary Table 7                                         ---- ####
-#### ---- line 806: Repeat metacommunity stability and asynchorny analysis at the 51-100 km distance range (Supplementary ---- ####
+#### ---- line 801: Repeat metacommunity stability and asynchorny analysis at the 51-100 km distance range (Supplementary ---- ####
+#### ---- Fig. 12)
+
 #### ---- Fig. 12)
 
 #### ---- MAXIMUM MPA DISTANCE ANALYSIS ---- ####
