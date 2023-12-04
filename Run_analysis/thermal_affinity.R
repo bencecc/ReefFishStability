@@ -250,7 +250,7 @@ fig4 <- ggarrange(
 
 
 #windows(width=8,height=4)
-fig4_h
+fig4
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/Fig4.pdf",
 		scale=0.9, dpi = 300, width = 180, height = 100, units="mm")
