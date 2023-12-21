@@ -726,9 +726,102 @@ for(i in 1:length(inext.div.mpa.plot)) {
 
 #### -------------------------------------------------------------- ####
 
+# how many MHWs before 2011 (end of climatology)?
+load('mhw.res.by.yr.RData')
 
+from.2012 <- site_fish_stab %>% filter(END_YEAR<2011)
 
+ntot.mhws <- mhw.res.by.yr %>%
+		summarise(n.mhws=sum(num_events, na.rm=T))
+nmhw.pre.2011 <- mhw.res.by.yr %>%
+		filter(SITE_ID%in%from.2012$SITE_ID) %>%
+		summarise(n.mhws=sum(num_events, na.rm=T))
+# 830/46976
 
+# Repeat whole analysis excluding the 40 sites where sampling ended before 2011
+# to generate FigS15.
+
+test.dat <- site_fish_stab %>% 
+		filter(END_YEAR>=2012) %>%  
+		mutate(
+				STAB=standardize(log(1/CV_TOT_ABUND)),
+				SP.STAB=standardize(log(1/CV_SP_ABUND)),
+				ASYNC=standardize(ASYNC_GROSS_W),
+				FRIC=standardize(mFRic),
+				SR=standardize(log(N_SPEC)),
+				MHW=standardize(MHW),
+				REMOTENESS=standardize(REMOTENESS),
+				AREA=standardize(log(SAMPLED_AREA)),
+				MEAN.ABUND=standardize(log(MEAN_TOT_ABUND)),
+				SD.ABUND=standardize(log(SD_TOT_ABUND)),
+				MPA=fct_relevel(MPA,
+						c("Unprotected","Protected"))
+		) 		
+
+#### ALPHA STAB  ####
+# ASYNC
+x.range <- (test.dat %>% summarise(range=range(ASYNC)))$range
+alpha.async <- sep_fit_plot(df=test.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
+# SP.STAB
+x.range <- (test.dat %>% summarise(range=range(SP.STAB)))$range
+alpha.spstab <- sep_fit_plot(df=test.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
+# FRIC
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+alpha.fric <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+alpha.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+alpha.remot <- sep_fit_plot(df=test.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+
+#### SP.STAB ####
+# FRIC
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+spstab.fric <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW 
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+spstab.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+spstab.remot <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+
+#### ASYNC ####
+# FRIC
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+async.fric <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
+# MHW
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
+async.mhw <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, r2=T, plot=F)
+# REMOTENESS
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+async.remot <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+
+#### FUNCIONAL RICHNESS ####
+# FRIC
+x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+fric.mhw <- sep_fit_plot(df=test.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
+fric.remot <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+
+# FigS15
+figS15 <- ggarrange(
+		alpha.async[[1]], alpha.spstab[[1]], alpha.mhw[[1]], alpha.remot[[1]],
+		spstab.mhw[[1]], spstab.remot[[1]], async.mhw[[1]], async.remot[[1]],
+		fric.mhw[[1]], fric.remot[[1]],
+		ncol=4, nrow=3,
+		align="hv",
+		labels=c("b","c","d","e","f","g","h","i","j","k"),
+		font.label = list(size = 10),
+		label.x=0.1
+)
+
+#windows(width=12,height=8)
+figS15k
+dev.off()
+ggsave(file = "~/Data_ReefFishStability/Figs/FigS15.pdf",
+		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
+
+#### ----------------------------------------------------------------------------------------------- ####
 
 
 
