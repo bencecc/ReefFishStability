@@ -1,7 +1,7 @@
 # ReefFishStability
 ## R code for the analysis of the paper by Benedetti-Cecchi et al (in review): Marine protected areas promote stability of reef fish communities under climate warming.
 ### All analyses were done in R version 4.1.3 using libraries:
-brms, broom, codyn, datawizard, DHARMa, doMC, FD, fishualize, foreach, ggeffects, ggstatsplot, igraph, knitr, lemon, lme4, lmerTest, mFD, mgcv, modelr, performance, piecewiseSEM, rnaturalearth, semEff, sf, sjPlot, SteinerNet, tidybayes, tidyverse, tidymv.
+brms, broom, codyn, datawizard, DHARMa, doMC, FD, fishualize, foreach, ggeffects, ggstatsplot, igraph, knitr, lemon, lme4, lmerTest, mFD, mgcv, modelr, performance, piecewiseSEM, rnaturalearth, semEff, sf, sjPlot, tidybayes, tidyverse, tidymv.
 
 ## USAGE: 
 To run the analyses, first download the files on your computer, then:
