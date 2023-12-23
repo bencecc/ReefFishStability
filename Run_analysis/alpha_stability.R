@@ -352,10 +352,10 @@ x.range <- (test.dat %>% summarise(range=range(SP.STAB)))$range
 alpha.spstab.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
 # FRIC
 x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
-alpha.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+alpha.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, y.lab=F, plot=F)
 # MHW
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-alpha.mhw.mhwcum <- p.alpha.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
+alpha.mhw.mhwcum <- p.alpha.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, plot=F)
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
 alpha.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
@@ -366,7 +366,7 @@ x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
 spstab.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
 # MHW 
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-spstab.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+spstab.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=F, y.lab=F, plot=F)
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
 spstab.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
@@ -376,33 +376,38 @@ x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
 async.fric.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
 # MHW
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-async.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, plot=F)
+async.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, y.lab=F, plot=F)
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
 async.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 #### FUNCIONAL RICHNESS ####
 # FRIC 
-x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
+x.range <- (test.dat %>% summarise(range=range(MHW)))$range
 fric.mhwcum <- sep_fit_plot(df=test.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
-fric.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=T, y.lab=F, plot=F)
+x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
+fric.remot.mhwcum <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
 
 # FigS4
+p.spacer <- ggplot() + theme(panel.border = element_blank())
+
 figs4 <- ggarrange(
-		alpha.async.mhwcum[[1]], alpha.spstab.mhwcum[[1]], alpha.mhw.mhwcum[[1]], alpha.remot.mhwcum[[1]],
-		spstab.mhwcum[[1]], spstab.remot.mhwcum[[1]], async.mhwcum[[1]], async.remot.mhwcum[[1]],
+		alpha.async.mhwcum[[1]], alpha.spstab.mhwcum[[1]], alpha.fric.mhwcum[[1]],
+		alpha.mhw.mhwcum[[1]], alpha.remot.mhwcum[[1]], p.spacer,
+		spstab.fric.mhwcum[[1]], spstab.mhwcum[[1]], spstab.remot.mhwcum[[1]],
+		async.fric.mhwcum[[1]], async.mhwcum[[1]], async.remot.mhwcum[[1]],
 		fric.mhwcum[[1]], fric.remot.mhwcum[[1]],
-		ncol=4, nrow=3,
+		ncol=3, nrow=5,
 		align="hv",
-		labels=c("a","b","c","d","e","f","g","h","i","j"),
+		labels=c("a","b","c","d","e","","f","g","h","i","j","k","l","m"),
 		font.label = list(size = 10),
-		label.x=0.1
+		label.x=0.11
 )
 
-#windows(width=12,height=8)
+#windows(width=6,height=8)
 figs4
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS4.pdf",
-		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
+		dpi = 300, width = 150, height = 180, units="mm", device=cairo_pdf)
 
 #### ---- Sensitivity analysis for the offset ---- ####
 # Alternative analysis to control for sampling effort using log-response ratios
@@ -438,11 +443,13 @@ alpha.dat <- site_fish_stab %>%
 x.range <- (alpha.dat %>% summarise(range=range(ASYNC)))$range
 alpha1.async <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
 x.range <- (alpha.dat %>% summarise(range=range(SP.STAB)))$range
-alpha1.spstab <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="SP.STAB", x.range=x.range, r2=F, y.lab=F, plot=F)
+alpha1.spstab <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
+x.range <- (alpha.dat %>% summarise(range=range(FRIC)))$range
+alpha1.fric <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="FRIC", x.range=x.range, y.lab=F, plot=F)
 x.range <- (alpha.dat %>% summarise(range=range(MHW)))$range
-alpha1.mhw <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="MHW", x.range=x.range, r2=F, y.lab=F, plot=F)
+alpha1.mhw <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="MHW", x.range=x.range, plot=F)
 x.range <- (alpha.dat %>% summarise(range=range(REMOTENESS)))$range
-alpha1.remot <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+alpha1.remot <- sep_fit_plot(df=alpha.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### SP.STAB ####
 sp.dat <- site_fish_stab %>% 
@@ -456,10 +463,13 @@ sp.dat <- site_fish_stab %>%
 				MPA=fct_relevel(MPA,
 						c("Unprotected","Protected"))
 		) 		
+
+x.range <- (sp.dat %>% summarise(range=range(FRIC)))$range
+spstab1.fric <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
 x.range <- (sp.dat %>% summarise(range=range(MHW)))$range
-spstab1.mhw <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+spstab1.mhw <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
 x.range <- (sp.dat %>% summarise(range=range(REMOTENESS)))$range
-spstab1.remot <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+spstab1.remot <- sep_fit_plot(df=sp.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### ASYNCHRONY ####
 async.dat <- site_fish_stab %>% 
@@ -476,9 +486,9 @@ async.dat <- site_fish_stab %>%
 x.range <- (async.dat %>% summarise(range=range(FRIC)))$range
 async1.fric <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
 x.range <- (async.dat %>% summarise(range=range(MHW)))$range
-async1.mhw <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="MHW", x.range=x.range, r2=F, plot=F)
+async1.mhw <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="MHW", x.range=x.range, y.lab=F, plot=F)
 x.range <- (async.dat %>% summarise(range=range(REMOTENESS)))$range
-async1.remot <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+async1.remot <- sep_fit_plot(df=async.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### FUNCTIONAL RICHNESS ####
 fric.dat <- site_fish_stab %>% 
@@ -496,22 +506,26 @@ x.range <- (fric.dat %>% summarise(range=range(REMOTENESS)))$range
 fric1.remot <- sep_fit_plot(df=fric.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
 
 # FigS5
+p.spacer <- ggplot() + theme(panel.border = element_blank())
+
 figs5 <- ggarrange(
-		alpha1.async[[1]], alpha1.spstab[[1]], alpha1.mhw[[1]], alpha1.remot[[1]],
-		spstab1.mhw[[1]], spstab1.remot[[1]], fric1.mhw[[1]], fric1.remot[[1]],
+		alpha1.async[[1]], alpha1.spstab[[1]], alpha1.fric[[1]],
+		alpha1.mhw[[1]], alpha1.remot[[1]], p.spacer,
+		spstab1.fric [[1]], spstab1.mhw[[1]], spstab1.remot[[1]],
 		async1.fric[[1]], async1.mhw[[1]], async1.remot[[1]],
-		ncol=4, nrow=3,
+		fric1.mhw[[1]], fric1.remot[[1]],
+		ncol=3, nrow=5,
 		align="hv",
-		labels=c("a","b","c","d","e","f","g","h","i","j","k"),
+		labels=c("a","b","c","d","e","","f","g","h","i","j","k","l","m"),
 		font.label = list(size = 10),
-		label.x=0.1
+		label.x=0.11
 )
 
-#windows(width=12,height=8)
+windows(width=6,height=8)
 figs5
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS5.pdf",
-		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
+		dpi = 300, width = 150, height = 180, units="mm", device=cairo_pdf)
 
 #### ---- Correlation among functional diversity indices ---- ####
 
@@ -607,8 +621,8 @@ fish.sp.abund <- master.fish.dat %>%
 						TRANSECT_SIZE>500 ~ 2000, 
 						TRUE ~ as.numeric(TRANSECT_SIZE))
 		)
-
 inext.res <- list()
+
 for(i in 1:length(unique(fish.sp.abund$TRANSECT_SIZE))) {
 	
 	test.dat <- fish.sp.abund %>%
@@ -759,67 +773,73 @@ test.dat <- site_fish_stab %>%
 		) 		
 
 #### ALPHA STAB  ####
+
 # ASYNC
 x.range <- (test.dat %>% summarise(range=range(ASYNC)))$range
-alpha.async <- sep_fit_plot(df=test.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
+alpha2.async <- sep_fit_plot(df=test.dat, resp="STAB", cov="ASYNC", x.range=x.range, r2=T, plot=F)
 # SP.STAB
 x.range <- (test.dat %>% summarise(range=range(SP.STAB)))$range
-alpha.spstab <- sep_fit_plot(df=test.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
+alpha2.spstab <- sep_fit_plot(df=test.dat, resp="STAB", cov="SP.STAB", x.range=x.range, y.lab=F, plot=F)
 # FRIC
 x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
-alpha.fric <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+alpha2.fric <- sep_fit_plot(df=test.dat, resp="STAB", cov="FRIC", x.range=x.range, y.lab=F, plot=F)
 # MHW
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-alpha.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
+alpha2.mhw <- sep_fit_plot(df=test.dat, resp="STAB", cov="MHW", x.range=x.range, plot=F)
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
-alpha.remot <- sep_fit_plot(df=test.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+alpha2.remot <- sep_fit_plot(df=test.dat, resp="STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### SP.STAB ####
 # FRIC
 x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
-spstab.fric <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
+spstab2.fric <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="FRIC", x.range=x.range, r2=T, plot=F)
 # MHW 
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-spstab.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, r2=T, plot=F)
+spstab2.mhw <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="MHW", x.range=x.range, y.lab=F, plot=F)
+
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
-spstab.remot <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+spstab2.remot <- sep_fit_plot(df=test.dat, resp="SP.STAB", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### ASYNC ####
 # FRIC
 x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
-async.fric <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
+async2.fric <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="FRIC", x.range=x.range, r2=T, plot=F)
 # MHW
 x.range <- (test.dat %>% summarise(range=range(MHW)))$range
-async.mhw <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, r2=T, plot=F)
+async2.mhw <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="MHW", x.range=x.range, y.lab=F, plot=F)
 # REMOTENESS
 x.range <- (test.dat %>% summarise(range=range(REMOTENESS)))$range
-async.remot <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
+async2.remot <- sep_fit_plot(df=test.dat, resp="ASYNC", cov="REMOTENESS", x.range=x.range, y.lab=F, plot=F)
 
 #### FUNCIONAL RICHNESS ####
 # FRIC
 x.range <- (test.dat %>% summarise(range=range(FRIC)))$range
-fric.mhw <- sep_fit_plot(df=test.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
-fric.remot <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
+fric2.mhw <- sep_fit_plot(df=test.dat, resp="FRIC", cov="MHW", x.range=x.range, r2=T, plot=F)
+fric2.remot <- sep_fit_plot(df=test.dat, resp="FRIC", cov="REMOTENESS", x.range=x.range, r2=F, y.lab=F, plot=F)
 
 # FigS15
-figS15 <- ggarrange(
-		alpha.async[[1]], alpha.spstab[[1]], alpha.mhw[[1]], alpha.remot[[1]],
-		spstab.mhw[[1]], spstab.remot[[1]], async.mhw[[1]], async.remot[[1]],
-		fric.mhw[[1]], fric.remot[[1]],
-		ncol=4, nrow=3,
-		align="hv",
-		labels=c("b","c","d","e","f","g","h","i","j","k"),
-		font.label = list(size = 10),
-		label.x=0.1
-)
+p.spacer <- ggplot() + theme(panel.border = element_blank())
 
-#windows(width=12,height=8)
-figS15k
+figS15 <- ggarrange(
+		alpha2.async[[1]], alpha2.spstab[[1]], alpha2.fric[[1]],
+		alpha2.mhw[[1]], alpha2.remot[[1]], p.spacer,
+		spstab2.fric [[1]], spstab2.mhw[[1]], spstab2.remot[[1]],
+		async2.fric[[1]], async2.mhw[[1]], async2.remot[[1]],
+		fric2.mhw[[1]], fric2.remot[[1]],
+		ncol=3, nrow=5,
+		align="hv",
+		labels=c("a","b","c","d","e","","f","g","h","i","j","k","l","m"),
+		font.label = list(size = 10),
+		label.x=0.11)
+
+#windows(width=6,height=8)
+figS15
 dev.off()
 ggsave(file = "~/Data_ReefFishStability/Figs/FigS15.pdf",
-		dpi = 300, width = 180, height = 125, units="mm", device=cairo_pdf)
+		dpi = 300, width = 150, height = 180, units="mm", device=cairo_pdf)
+
 
 #### ----------------------------------------------------------------------------------------------- ####
 
