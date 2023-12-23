@@ -218,8 +218,8 @@ m.remot.alpha.fric <- lmer(FRIC ~ REMOTENESS*MPA + (1|ID) + offset(AREA),
 tab_model(m.remot.alpha.fric,  show.stat=T, show.ci=F, show.se=T)
 fs2.13 <- site_plot_func(m.remot.alpha.fric, y.lab=F)
 
-p.spacer <- ggplot() +
-		theme(panel.border = element_blank())
+# FigS2
+p.spacer <- ggplot() + theme(panel.border = element_blank())
 
 figs2 <- ggarrange(
 		fs2.1, fs2.2, fs2.3,
