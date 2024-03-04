@@ -133,7 +133,7 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- line 480: Summary of characteristics of metacommunities - Supplementary Table 5                                 ---- ####
 #### ---- line 513: Connectivity assessment - average metacommunity dissimilarity (also in Supplementary Table 5)         ---- ####
 #### ---- CHECKS AND SENSITIVITY ANALYSIS:                                                                                ---- ####
-#### ---- line 542: Connectivity assessment - global network connectivity - Supplementary Figs. 10 and 11                  ---- ####
+#### ---- line 542: Connectivity assessment - global network connectivity - Supplementary Figs. 10 and 11                 ---- ####
 #### ---- line 726: relationships between closenees centrality measured on from physically-derived graphs and degree      ---- ####
 #### ---- centrality from biologically-derived graphs - Results for Supplementary Table 6                                 ---- ####
 #### ---- line 757: relationhsips of stability and asynchony measures with MPA network characterstics (extent,            ---- #### 
