@@ -141,8 +141,6 @@ load("~/Data_ReefFishStability/metastats.res.RData")
 #### ---- line 801: Repeat metacommunity stability and asynchorny analysis at the 51-100 km distance range (Supplementary ---- ####
 #### ---- Fig. 12)
 
-#### ---- Fig. 12)
-
 #### ---- MAXIMUM MPA DISTANCE ANALYSIS ---- ####
 # filter DIST to select the maximum distance between any two MPAs in a metacommunity, which is equal to MPANET_EXTENT
 metastats.res <- metastats.res %>% group_by(ID) %>%
@@ -237,7 +235,7 @@ metasp <- brm(
 
 #### ---- Posterior distributions ---- ####
 
-# this is average species asynchorny metric as in Lamy et al
+# this is average species asynchorny metric as in Lamy et al. 2019. Ecology. https://doi.org/10.1002/ecy.2719.
 post.locsp <- eff.size.df %>%
 		filter(METRICS=="loc_sp_comm_async_gross_w") %>%
 		# Get the posterior predictions
