@@ -1,7 +1,7 @@
 #### ------------------------------ GAMMA STABILITY ANALYSIS --------------------------------------- ####
 #### ---- NOTE: this analysis is slow and was originally performed on an hpc cluster. The       ---- ####
 #### ---- resulting file metastats.res.RData is provided in folder ~/Data_ReefFishStability     ---- ####
-#### ---- and you may want to go directly to the analysis at line 127 of this script.           ---- ####
+#### ---- and you may want to go directly to the analysis at line 123 of this script.           ---- ####
 
 # generate folder to save partial results. 
 if(!file.exists("~/Data_ReefFishStability/jnife_res"))
